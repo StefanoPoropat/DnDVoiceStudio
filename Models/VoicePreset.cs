@@ -43,4 +43,6 @@ public partial class VoicePreset : ObservableObject
     [ObservableProperty]
     private float titan;
 
+    [ObservableProperty]
+    private string hotkey = "";
 }

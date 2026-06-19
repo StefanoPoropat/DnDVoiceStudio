@@ -1,5 +1,7 @@
-﻿using DnDVoiceStudio.ViewModels;
+﻿using DnDVoiceStudio.Services;
+using DnDVoiceStudio.ViewModels;
 using System.Windows;
+using System.Windows.Input;
 
 namespace DnDVoiceStudio;
 
@@ -30,5 +32,40 @@ public partial class MainWindow : Window
                         (float)level);
             });
         };
+
+        _hotkeys.HotkeyPressed += OnHotkeyPressed;
+    }
+
+    private readonly HotkeyService
+    _hotkeys = new();
+
+    private void Window_KeyDown(
+    object sender,
+    KeyEventArgs e)
+    {
+        _hotkeys.HandleKey(e.Key);
+    }
+
+    private void OnHotkeyPressed(
+    Key key)
+    {
+        if (DataContext is not
+            MainViewModel vm)
+            return;
+
+        string keyName =
+            key.ToString();
+
+        var preset =
+            vm.VoicePresets
+              .FirstOrDefault(
+                  p => p.Hotkey ==
+                       keyName);
+
+        if (preset == null)
+            return;
+
+        vm.SelectVoiceCommand
+          .Execute(preset);
     }
 }
