@@ -1,0 +1,616 @@
+﻿<Window
+    x:Class="DnDVoiceStudio.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:Controls="clr-namespace:DnDVoiceStudio.Controls"
+    mc:Ignorable="d"
+    Title="DnD Voice Studio"
+    Height="850"
+    Width="1500">
+
+    <Grid Margin="15">
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- HEADER -->
+
+        <Border
+            Grid.Row="0"
+            Padding="10"
+            Margin="0,0,0,15">
+
+            <StackPanel>
+
+                <TextBlock
+                    Text="DnD Voice Studio"
+                    FontSize="32"
+                    FontWeight="Bold"/>
+
+                <TextBlock
+                    Margin="0,5,0,0"
+                    FontStyle="Italic"
+                    Text="{Binding StatusMessage}" />
+
+                <TextBlock
+                    Margin="0,5,0,0"
+                    FontSize="16"
+                    Text="{Binding CurrentVoice.Name,
+                           StringFormat=Current Voice: {0}}" />
+
+            </StackPanel>
+
+        </Border>
+
+        <!-- MAIN CONTENT -->
+
+        <Grid Grid.Row="1">
+
+            <Grid.ColumnDefinitions>
+
+                <ColumnDefinition Width="320"/>
+                <ColumnDefinition Width="260"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="300"/>
+
+            </Grid.ColumnDefinitions>
+
+            <!-- AUDIO + VOICE LAB -->
+
+            <ScrollViewer
+                Grid.Column="0"
+                VerticalScrollBarVisibility="Auto"
+                Margin="0,0,10,0">
+
+                <StackPanel>
+
+                    <!-- AUDIO -->
+
+                    <GroupBox
+                        Header="Audio Controls"
+                        Margin="0,0,0,10">
+
+                        <StackPanel Margin="10">
+
+                            <Button
+                                Height="40"
+                                Content="Start Mic"
+                                Command="{Binding StartMicCommand}" />
+
+                            <Button
+                                Height="40"
+                                Margin="0,10,0,0"
+                                Content="Stop Mic"
+                                Command="{Binding StopMicCommand}" />
+
+                            <TextBlock
+                                Margin="0,15,0,5"
+                                Text="Microphone" />
+
+                            <ComboBox
+                                ItemsSource="{Binding InputDevices}"
+                                SelectedItem="{Binding SelectedInputDevice}"
+                                DisplayMemberPath="Name" />
+
+                            <TextBlock
+                                Margin="0,15,0,5"
+                                Text="Mic Level" />
+
+                            <ProgressBar
+                                Height="20"
+                                Maximum="100"
+                                Value="{Binding MicrophoneLevel}" />
+
+                            <TextBlock
+                                Margin="0,5,0,5"
+                                Text="{Binding MicrophoneLevel}" />
+
+
+                            <Controls:WaveformHost
+                                x:Name="WaveformView"
+                                Height="100"/>
+
+                            <TextBlock
+                                Margin="0,15,0,5"
+                                Text="Output Volume" />
+
+                            <Slider
+                                Minimum="0"
+                                Maximum="10"
+                                Value="{Binding OutputVolume}" />
+
+                        </StackPanel>
+
+                    </GroupBox>
+
+                    <!-- VOICE LAB -->
+
+                    <GroupBox Header="Voice Lab">
+
+                        <ScrollViewer VerticalScrollBarVisibility="Auto">
+
+                            <StackPanel Margin="10">
+
+                                <!-- PRESET -->
+
+                                <GroupBox Header="Character Templates"
+          Margin="0,10,0,0">
+
+                                    <ListBox
+        ItemsSource="{Binding CharacterTemplates}">
+
+                                        <ListBox.ItemTemplate>
+                                            <DataTemplate>
+
+                                                <Button
+                    Content="{Binding Name}"
+                    Margin="2"
+                    Padding="4"
+                    Command="{Binding DataContext.ApplyTemplateCommand,
+                              RelativeSource={RelativeSource AncestorType=Window}}"
+                    CommandParameter="{Binding}" />
+
+                                            </DataTemplate>
+                                        </ListBox.ItemTemplate>
+
+                                    </ListBox>
+
+                                </GroupBox>
+
+                                <TextBlock
+                FontWeight="Bold"
+                FontSize="14"
+                Text="Preset"/>
+
+                                <TextBox
+                Height="30"
+                Margin="0,5,0,15"
+                Text="{Binding PresetName}" />
+
+                                <GroupBox Header="Voice Morphing"
+          Margin="0,10,0,0">
+
+                                    <StackPanel>
+
+                                        <TextBlock
+            Text="Preset A" />
+
+                                        <ComboBox
+            ItemsSource="{Binding VoicePresets}"
+            SelectedItem="{Binding MorphPresetA}"
+            DisplayMemberPath="Name"/>
+
+                                        <TextBlock
+            Margin="0,6,0,0"
+            Text="Preset B"/>
+
+                                        <ComboBox
+            ItemsSource="{Binding VoicePresets}"
+            SelectedItem="{Binding MorphPresetB}"
+            DisplayMemberPath="Name"/>
+
+                                        <TextBlock
+            Margin="0,6,0,0"
+            Text="Blend"/>
+
+                                        <Slider
+            Minimum="0"
+            Maximum="1"
+            TickFrequency="0.1"
+            Value="{Binding MorphBlend}" />
+
+                                        <Button
+            Margin="0,8,0,0"
+            Content="Apply Morph"
+            Command="{Binding ApplyMorphCommand}" />
+
+                                    </StackPanel>
+
+                                </GroupBox>
+
+                                <StackPanel
+    Orientation="Horizontal"
+    Margin="0,10,0,0">
+
+                                    <Button
+        Content="Preview"
+        Width="100"
+        Margin="0,0,10,0"
+        Command="{Binding PreviewVoiceCommand}" />
+
+                                    <Button
+        Content="Stop"
+        Width="100"
+        Command="{Binding StopPreviewCommand}" />
+
+                                </StackPanel>
+
+                                <!-- VOICE SHAPE -->
+
+                                <Expander
+                Header="Voice Shape"
+                IsExpanded="True">
+
+                                    <StackPanel Margin="5">
+
+                                        <TextBlock Text="Pitch"/>
+
+                                        <Slider
+                        Minimum="-12"
+                        Maximum="12"
+                        Value="{Binding CurrentPitch}" />
+
+                                        <TextBlock
+                        Text="{Binding CurrentPitch}" />
+
+                                        <TextBlock
+                        Margin="0,10,0,0"
+                        Text="Formant" />
+
+                                        <Slider
+                        Minimum="-12"
+                        Maximum="12"
+                        Value="{Binding CurrentFormant}" />
+
+                                        <TextBlock
+                        Text="{Binding CurrentFormant}" />
+
+                                    </StackPanel>
+
+                                </Expander>
+
+                                <!-- EQ -->
+
+                                <Expander
+                Header="Equalizer"
+                IsExpanded="True">
+
+                                    <StackPanel Margin="5">
+
+                                        <TextBlock Text="Bass Boost"/>
+
+                                        <Slider
+                        Minimum="-20"
+                        Maximum="20"
+                        Value="{Binding CurrentBassBoost}" />
+
+                                        <TextBlock
+                        Text="{Binding CurrentBassBoost}" />
+
+                                        <TextBlock
+                        Margin="0,10,0,0"
+                        Text="Treble Boost" />
+
+                                        <Slider
+                        Minimum="-20"
+                        Maximum="20"
+                        Value="{Binding CurrentTrebleBoost}" />
+
+                                        <TextBlock
+                        Text="{Binding CurrentTrebleBoost}" />
+
+                                    </StackPanel>
+
+                                </Expander>
+
+                                <!-- DYNAMICS -->
+
+                                <Expander
+                Header="Dynamics"
+                IsExpanded="True">
+
+                                    <StackPanel Margin="5">
+
+                                        <TextBlock Text="Compression"/>
+
+                                        <Slider
+                        Minimum="0"
+                        Maximum="100"
+                        Value="{Binding CurrentCompression}" />
+
+                                        <TextBlock
+                        Text="{Binding CurrentCompression}" />
+
+                                    </StackPanel>
+
+                                </Expander>
+
+                                <!-- EFFECTS -->
+
+                                <Expander
+                Header="Effects"
+                IsExpanded="True">
+
+                                    <StackPanel Margin="5">
+
+                                        <TextBlock Text="Reverb"/>
+
+                                        <Slider
+                        Minimum="0"
+                        Maximum="100"
+                        Value="{Binding CurrentReverb}" />
+
+                                        <TextBlock
+                        Text="{Binding CurrentReverb}" />
+
+                                        <TextBlock
+                        Margin="0,10,0,0"
+                        Text="Distortion"/>
+
+                                        <Slider
+                        Minimum="0"
+                        Maximum="100"
+                        Value="{Binding CurrentDistortion}" />
+
+                                        <TextBlock
+                        Text="{Binding CurrentDistortion}" />
+
+                                    </StackPanel>
+
+                                </Expander>
+
+                                <TextBlock Text="Demon" />
+                                <Slider Minimum="0"
+        Maximum="100"
+        Value="{Binding CurrentDemon}" />
+
+                                <TextBlock Text="Whisper" />
+                                <Slider Minimum="0"
+        Maximum="100"
+        Value="{Binding CurrentWhisper}" />
+
+                                <TextBlock Text="Radio" />
+                                <Slider Minimum="0"
+        Maximum="100"
+        Value="{Binding CurrentRadio}" />
+
+                                <TextBlock Text="Titan" />
+                                <Slider Minimum="0"
+        Maximum="100"
+        Value="{Binding CurrentTitan}" />
+
+                                <!-- PRESET BUTTONS -->
+
+                                <WrapPanel Margin="0,20,0,0">
+
+                                    <Button
+                    Width="85"
+                    Content="New"
+                    Command="{Binding NewPresetCommand}" />
+
+                                    <Button
+                    Width="85"
+                    Margin="10,0,0,0"
+                    Content="Save"
+                    Command="{Binding SavePresetCommand}" />
+
+                                    <Button
+                    Width="85"
+                    Margin="10,0,0,0"
+                    Content="Delete"
+                    Command="{Binding DeletePresetCommand}" />
+
+                                </WrapPanel>
+
+                            </StackPanel>
+
+                        </ScrollViewer>
+
+                    </GroupBox>
+
+                </StackPanel>
+
+            </ScrollViewer>
+
+            <!-- PRESETS -->
+
+            <GroupBox
+                Grid.Column="1"
+                Header="Voice Presets"
+                Margin="0,0,10,0">
+
+                <ListBox
+                    ItemsSource="{Binding VoicePresets}"
+                    SelectedItem="{Binding CurrentVoice}">
+
+                    <ListBox.ItemTemplate>
+
+                        <DataTemplate>
+
+                            <Border
+                                Margin="4"
+                                Padding="10"
+                                BorderThickness="1">
+
+                                <Button
+                                    Height="45"
+                                    Content="{Binding Name}"
+                                    Command="{Binding DataContext.SelectVoiceCommand,
+                                              RelativeSource={RelativeSource AncestorType=Window}}"
+                                    CommandParameter="{Binding}" />
+
+                            </Border>
+
+                        </DataTemplate>
+
+                    </ListBox.ItemTemplate>
+
+                </ListBox>
+
+            </GroupBox>
+
+            <!-- SOUNDBOARD -->
+            
+            <GroupBox
+                Grid.Column="2"
+                Header="Soundboard"
+                Margin="0,0,10,0">
+                
+                
+
+                <DockPanel Margin="10">
+
+                    <StackPanel
+                        DockPanel.Dock="Top"
+                        Orientation="Horizontal"
+                        Margin="0,0,0,10">
+
+                        <Button
+                            Width="120"
+                            Height="35"
+                            Content="Stop All"
+                            Command="{Binding StopAllSoundsCommand}" />
+
+                        <TextBox
+                            Width="300"
+                            Height="35"
+                            Margin="10,0,0,0"
+                            Text="{Binding SoundSearch,
+                                   UpdateSourceTrigger=PropertyChanged}" />
+
+                    </StackPanel>
+
+                    <ListBox
+                        ItemsSource="{Binding SoundboardItems}">
+
+                        <ListBox.ItemTemplate>
+
+                            <DataTemplate>
+
+                                <Border
+                                    Margin="4"
+                                    Padding="10"
+                                    BorderBrush="Gray"
+                                    BorderThickness="1"
+                                    CornerRadius="5">
+
+                                    <Grid>
+
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+
+                                        <StackPanel>
+
+                                            <TextBlock
+                                                FontWeight="Bold"
+                                                FontSize="14"
+                                                Text="{Binding Name}" />
+
+                                            <TextBlock
+                                                FontSize="11"
+                                                Opacity="0.7"
+                                                Text="{Binding Category}" />
+
+                                        </StackPanel>
+
+                                        <Button
+                                            Grid.Column="1"
+                                            Width="90"
+                                            Height="35"
+                                            Content="Play"
+                                            Command="{Binding DataContext.PlaySoundCommand,
+                                                      RelativeSource={RelativeSource AncestorType=Window}}"
+                                            CommandParameter="{Binding}" />
+
+                                    </Grid>
+
+                                </Border>
+
+                            </DataTemplate>
+
+                        </ListBox.ItemTemplate>
+
+                    </ListBox>
+
+                </DockPanel>
+
+            </GroupBox>
+
+            <!-- AI MODELS -->
+
+            <GroupBox
+                Grid.Column="3"
+                Header="AI Voice Models">
+
+                <DockPanel Margin="10">
+
+                    <StackPanel
+                        DockPanel.Dock="Top"
+                        Margin="0,0,0,10">
+
+                        <Button
+                            Height="35"
+                            Content="Refresh Models"
+                            Command="{Binding RefreshAiModelsCommand}" />
+
+                        <Button
+                            Height="35"
+                            Margin="0,5,0,0"
+                            Content="Check AI Environment"
+                            Command="{Binding CheckAiEnvironmentCommand}" />
+
+                        <TextBlock
+                            Margin="0,10,0,0"
+                            FontWeight="Bold"
+                            Text="{Binding LoadedAiModel,
+                                   StringFormat=Loaded Model: {0}}" />
+
+                    </StackPanel>
+
+                    <ListBox
+                        ItemsSource="{Binding AiModels}">
+
+                        <ListBox.ItemTemplate>
+
+                            <DataTemplate>
+
+                                <Border
+                                    Margin="4"
+                                    Padding="8"
+                                    BorderBrush="Gray"
+                                    BorderThickness="1"
+                                    CornerRadius="5">
+
+                                    <StackPanel>
+
+                                        <TextBlock
+                                            FontWeight="Bold"
+                                            Text="{Binding Name}" />
+
+                                        <TextBlock
+                                            FontSize="11"
+                                            Opacity="0.7"
+                                            Text="{Binding ModelPath}" />
+
+                                        <Button
+                                            Margin="0,8,0,0"
+                                            Content="Load Model"
+                                            Command="{Binding DataContext.LoadAiModelCommand,
+                                                      RelativeSource={RelativeSource AncestorType=Window}}"
+                                            CommandParameter="{Binding}" />
+
+                                    </StackPanel>
+
+                                </Border>
+
+                            </DataTemplate>
+
+                        </ListBox.ItemTemplate>
+
+                    </ListBox>
+
+                </DockPanel>
+
+            </GroupBox>
+
+        </Grid>
+
+    </Grid>
+
+</Window>
