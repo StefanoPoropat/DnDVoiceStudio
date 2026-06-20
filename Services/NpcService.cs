@@ -1,23 +1,18 @@
-﻿using DnDVoiceStudio.Models;
+﻿/*using DnDVoiceStudio.Models;
 using System.IO;
 using System.Text.Json;
 
 namespace DnDVoiceStudio.Services;
 
-public class NpcLibraryService
+public class NpcService
 {
     private readonly string _filePath =
-    Path.Combine(
-        Directory.GetParent(
-            AppDomain.CurrentDomain.BaseDirectory)!
-        .Parent!
-        .Parent!
-        .Parent!
-        .FullName,
-        "Data",
-        "npcs.json");
+        Path.Combine(
+            AppDomain.CurrentDomain.BaseDirectory,
+            "Data",
+            "npcs.json");
 
-    public List<NpcProfile> LoadNpcs()
+    public List<Npc> Load()
     {
         try
         {
@@ -27,9 +22,8 @@ public class NpcLibraryService
             string json =
                 File.ReadAllText(_filePath);
 
-            return JsonSerializer.Deserialize<
-                List<NpcProfile>>(json)
-                ?? new();
+            return JsonSerializer.Deserialize<List<Npc>>(json)
+                   ?? new();
         }
         catch
         {
@@ -37,12 +31,11 @@ public class NpcLibraryService
         }
     }
 
-    public void SaveNpcs(
-        IEnumerable<NpcProfile> npcs)
+    public void Save(
+        IEnumerable<Npc> npcs)
     {
         Directory.CreateDirectory(
-            Path.GetDirectoryName(
-                _filePath)!);
+            Path.GetDirectoryName(_filePath)!);
 
         string json =
             JsonSerializer.Serialize(
@@ -56,4 +49,4 @@ public class NpcLibraryService
             _filePath,
             json);
     }
-}
+}*/

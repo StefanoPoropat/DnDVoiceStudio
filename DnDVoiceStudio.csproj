@@ -9,16 +9,20 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Assets\NPCPortraits\default.png" />
     <None Remove="Assets\PreviewVoices\voice-message.wav" />
     <None Remove="Assets\Sounds\Music\Final-Nice to meet you.wav" />
     <None Remove="Config\presets.json" />
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="Assets\NPCPortraits\default.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Assets\Sounds\Music\Final-Nice to meet you.wav">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Config\presets.json">
+    <Content Include="Config\_deleted\presets.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
@@ -35,12 +39,19 @@
     <Folder Include="Assets\Sounds\Combat\" />
     <Folder Include="Assets\Sounds\Ambience\" />
     <Folder Include="Assets\Sounds\NPC\" />
+    <Folder Include="NewFolder\" />
   </ItemGroup>
 
   <ItemGroup>
     <Content Include="Assets\PreviewVoices\voice-message.wav">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Data\npcs.json">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

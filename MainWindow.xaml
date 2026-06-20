@@ -659,32 +659,32 @@
                         <StackPanel>
 
                             <Button
-                    Height="35"
-                    Content="New NPC"
-                    Command="{Binding NewNpcCommand}" />
+        Height="35"
+        Content="New NPC"
+        Command="{Binding NewNpcCommand}" />
 
                             <Button
-                    Height="35"
-                    Margin="0,5,0,0"
-                    Content="Delete NPC"
-                    Command="{Binding DeleteNpcCommand}" />
+        Height="35"
+        Margin="0,5,0,0"
+        Content="Delete NPC"
+        Command="{Binding DeleteNpcCommand}" />
 
                             <ListBox
-                    Margin="0,10,0,0"
-                    ItemsSource="{Binding Npcs}"
-                    SelectedItem="{Binding SelectedNpc}">
+        Margin="0,10,0,0"
+        ItemsSource="{Binding Npcs}"
+        SelectedItem="{Binding SelectedNpc}">
 
                                 <ListBox.ItemTemplate>
 
                                     <DataTemplate>
 
                                         <Border
-                                Margin="2"
-                                Padding="6">
+                    Margin="2"
+                    Padding="6">
 
                                             <TextBlock
-                                    FontWeight="Bold"
-                                    Text="{Binding Name}" />
+                        FontWeight="Bold"
+                        Text="{Binding Name}" />
 
                                         </Border>
 
@@ -732,7 +732,7 @@
                     DisplayMemberPath="Name"
                     SelectedValuePath="Name"
                     SelectedValue="{Binding SelectedNpc.PresetName}" />
-
+                            
                             <Button
                     Margin="0,15,0,0"
                     Height="35"
@@ -744,7 +744,25 @@
                     Height="35"
                     Content="Save NPC Library"
                     Command="{Binding SaveNpcCommand}" />
+                            <TextBlock
+Margin="0,10,0,0"
+Text="Portrait"/>
 
+                            <Border
+Height="200"
+Width="200"
+Margin="0,5,0,0">
+
+                                <Image
+    Stretch="Uniform"
+    Source="{Binding CurrentNpcPortrait}" />
+
+                            </Border>
+
+                            <Button
+Margin="0,5,0,0"
+Content="Browse Portrait"
+Command="{Binding BrowsePortraitCommand}" />
                         </StackPanel>
 
                     </Grid>

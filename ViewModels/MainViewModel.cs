@@ -9,6 +9,7 @@ namespace DnDVoiceStudio.ViewModels;
 using DnDVoiceStudio.Models;
 using DnDVoiceStudio.Services;
 using DnDVoiceStudio.Services.VoicePreview;
+using System.IO;
 
 public partial class MainViewModel : ObservableObject
 {
@@ -178,6 +179,7 @@ public partial class MainViewModel : ObservableObject
         RefreshAiModels();
 
         LoadNpcs();
+
 
         _audioEngine.LevelChanged += level =>
         {
@@ -843,15 +845,35 @@ AiModels
     [ObservableProperty]
     private NpcProfile? selectedNpc;
 
+    partial void OnSelectedNpcChanged(
+        NpcProfile? value)
+    {
+        PendingPortraitPath = null;
+
+        OnPropertyChanged(
+            nameof(CurrentNpcPortrait));
+    }
+
     private void LoadNpcs()
     {
         Npcs.Clear();
 
-        foreach (var npc in
-                 _npcService.LoadNpcs())
+        foreach (var npc in _npcService.LoadNpcs())
         {
             Npcs.Add(npc);
         }
+        foreach (var npc in _npcService.LoadNpcs())
+        {
+            if (string.IsNullOrWhiteSpace(
+                npc.PortraitPath))
+            {
+                npc.PortraitPath =
+                    @"Assets\NPCPortraits\default.png";
+            }
+        }
+
+        SelectedNpc =
+            Npcs.FirstOrDefault();
     }
 
     [RelayCommand]
@@ -859,24 +881,64 @@ AiModels
     {
         var npc = new NpcProfile
         {
-            Name =
-                $"NPC {Npcs.Count + 1}"
+            Name = "New NPC",
+            PortraitPath = @"Assets\NPCPortraits\default.png"
         };
 
         Npcs.Add(npc);
 
         SelectedNpc = npc;
-
-        _npcService.SaveNpcs(Npcs);
     }
 
     [RelayCommand]
     private void SaveNpc()
     {
+        if (SelectedNpc != null &&
+            !string.IsNullOrWhiteSpace(
+                PendingPortraitPath))
+        {
+            string portraitsFolder =
+                Path.Combine(
+                    AppDomain.CurrentDomain.BaseDirectory,
+                    "Assets",
+                    "NPCPortraits");
+
+            Directory.CreateDirectory(
+                portraitsFolder);
+
+            string extension =
+                Path.GetExtension(
+                    PendingPortraitPath);
+
+            string fileName =
+                $"{Guid.NewGuid()}{extension}";
+
+            string destination =
+                Path.Combine(
+                    portraitsFolder,
+                    fileName);
+
+            File.Copy(
+                PendingPortraitPath,
+                destination,
+                true);
+
+            SelectedNpc.PortraitPath =
+                Path.Combine(
+                    "Assets",
+                    "NPCPortraits",
+                    fileName);
+
+            PendingPortraitPath = null;
+        }
+
         _npcService.SaveNpcs(Npcs);
 
         StatusMessage =
-            "NPC Library Saved";
+            $"Saved {Npcs.Count} NPCs";
+
+        OnPropertyChanged(
+            nameof(CurrentNpcPortrait));
     }
     [RelayCommand]
     private void DeleteNpc()
@@ -887,11 +949,10 @@ AiModels
         Npcs.Remove(
             SelectedNpc);
 
-        _npcService.SaveNpcs(
-            Npcs);
-
         SelectedNpc =
             Npcs.FirstOrDefault();
+
+        _npcService.SaveNpcs(Npcs);
     }
     [RelayCommand]
     private void ActivateNpc()
@@ -900,20 +961,100 @@ AiModels
             return;
 
         var preset =
-            VoicePresets
-            .FirstOrDefault(
-                p =>
-                p.Name ==
-                SelectedNpc.PresetName);
+            VoicePresets.FirstOrDefault(
+                p => p.Name ==
+                     SelectedNpc.PresetName);
 
         if (preset == null)
             return;
 
-        SelectVoiceCommand
-            .Execute(preset);
+        SelectVoice(preset);
 
         StatusMessage =
             $"Activated NPC: {SelectedNpc.Name}";
     }
+
+    [RelayCommand]
+    private void BrowsePortrait()
+    {
+        if (SelectedNpc == null)
+            return;
+
+        var dialog =
+            new Microsoft.Win32.OpenFileDialog();
+
+        dialog.Filter =
+            "Images|*.png;*.jpg;*.jpeg";
+
+        if (dialog.ShowDialog() == true)
+        {
+
+            string portraitsFolder =
+    Path.Combine(
+        AppDomain.CurrentDomain.BaseDirectory,
+        "Assets",
+        "NPCPortraits");
+
+            Directory.CreateDirectory(
+                portraitsFolder);
+
+            string fileName =
+                Path.GetFileName(
+                    dialog.FileName);
+
+            string destination =
+                Path.Combine(
+                    portraitsFolder,
+                    fileName);
+
+            PendingPortraitPath =
+    dialog.FileName;
+
+            OnPropertyChanged(
+                nameof(CurrentNpcPortrait));
+
+
+        }
+    }
+
+    public string CurrentNpcPortrait
+    {
+        get
+        {
+            if (!string.IsNullOrWhiteSpace(
+                    PendingPortraitPath) &&
+                File.Exists(
+                    PendingPortraitPath))
+            {
+                return PendingPortraitPath;
+            }
+
+            if (SelectedNpc == null)
+            {
+                return Path.Combine(
+                    AppDomain.CurrentDomain.BaseDirectory,
+                    "Assets",
+                    "NPCPortraits",
+                    "default.png");
+            }
+
+            if (string.IsNullOrWhiteSpace(
+                SelectedNpc.PortraitPath))
+            {
+                return Path.Combine(
+                    AppDomain.CurrentDomain.BaseDirectory,
+                    "Assets",
+                    "NPCPortraits",
+                    "default.png");
+            }
+
+            return Path.Combine(
+                AppDomain.CurrentDomain.BaseDirectory,
+                SelectedNpc.PortraitPath);
+        }
+    }
+
+    [ObservableProperty]
+    private string? pendingPortraitPath;
 
 }

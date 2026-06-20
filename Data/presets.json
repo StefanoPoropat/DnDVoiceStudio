@@ -1,4 +1,4 @@
-﻿[
+[
   {
     "Name": "Narrator",
     "Pitch": 0,
@@ -8,7 +8,12 @@
     "Compression": 15,
     "Reverb": 0,
     "Distortion": 0,
-    "IsAiVoice": false
+    "IsAiVoice": false,
+    "Demon": 0,
+    "Whisper": 0,
+    "Radio": 0,
+    "Titan": 0,
+    "Hotkey": ""
   },
   {
     "Name": "Goblin",
@@ -19,7 +24,12 @@
     "Compression": 30,
     "Reverb": 0,
     "Distortion": 5,
-    "IsAiVoice": false
+    "IsAiVoice": false,
+    "Demon": 0,
+    "Whisper": 0,
+    "Radio": 0,
+    "Titan": 0,
+    "Hotkey": ""
   },
   {
     "Name": "Orc",
@@ -30,7 +40,12 @@
     "Compression": 45,
     "Reverb": 5,
     "Distortion": 10,
-    "IsAiVoice": false
+    "IsAiVoice": false,
+    "Demon": 0,
+    "Whisper": 0,
+    "Radio": 0,
+    "Titan": 0,
+    "Hotkey": ""
   },
   {
     "Name": "Ghost",
@@ -41,7 +56,12 @@
     "Compression": 15,
     "Reverb": 40,
     "Distortion": 0,
-    "IsAiVoice": false
+    "IsAiVoice": false,
+    "Demon": 0,
+    "Whisper": 0,
+    "Radio": 0,
+    "Titan": 0,
+    "Hotkey": ""
   },
   {
     "Name": "Dragon",
@@ -52,7 +72,12 @@
     "Compression": 60,
     "Reverb": 25,
     "Distortion": 35,
-    "IsAiVoice": false
+    "IsAiVoice": false,
+    "Demon": 0,
+    "Whisper": 0,
+    "Radio": 0,
+    "Titan": 0,
+    "Hotkey": ""
   },
   {
     "Name": "Demon",
@@ -63,7 +88,12 @@
     "Compression": 55,
     "Reverb": 15,
     "Distortion": 50,
-    "IsAiVoice": false
+    "IsAiVoice": false,
+    "Demon": 0,
+    "Whisper": 0,
+    "Radio": 0,
+    "Titan": 0,
+    "Hotkey": ""
   },
   {
     "Name": "Elf",
@@ -74,7 +104,12 @@
     "Compression": 10,
     "Reverb": 10,
     "Distortion": 0,
-    "IsAiVoice": false
+    "IsAiVoice": false,
+    "Demon": 0,
+    "Whisper": 0,
+    "Radio": 0,
+    "Titan": 0,
+    "Hotkey": ""
   },
   {
     "Name": "Ancient Wizard",
@@ -85,7 +120,12 @@
     "Compression": 20,
     "Reverb": 20,
     "Distortion": 0,
-    "IsAiVoice": false
+    "IsAiVoice": false,
+    "Demon": 0,
+    "Whisper": 0,
+    "Radio": 0,
+    "Titan": 0,
+    "Hotkey": ""
   },
   {
     "Name": "Skeleton",
@@ -96,7 +136,12 @@
     "Compression": 25,
     "Reverb": 5,
     "Distortion": 10,
-    "IsAiVoice": false
+    "IsAiVoice": false,
+    "Demon": 0,
+    "Whisper": 0,
+    "Radio": 0,
+    "Titan": 0,
+    "Hotkey": ""
   },
   {
     "Name": "Dark Lord",
@@ -107,6 +152,27 @@
     "Compression": 50,
     "Reverb": 30,
     "Distortion": 15,
-    "IsAiVoice": false
+    "IsAiVoice": false,
+    "Demon": 0,
+    "Whisper": 0,
+    "Radio": 0,
+    "Titan": 0,
+    "Hotkey": ""
+  },
+  {
+    "Name": "Demon Narrator",
+    "Pitch": -4,
+    "Formant": -5,
+    "BassBoost": 12.5,
+    "TrebleBoost": -7.5,
+    "Compression": 35,
+    "Reverb": 7.5,
+    "Distortion": 25,
+    "IsAiVoice": false,
+    "Demon": 0,
+    "Whisper": 0,
+    "Radio": 0,
+    "Titan": 0,
+    "Hotkey": ""
   }
 ]

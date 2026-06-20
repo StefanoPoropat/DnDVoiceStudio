@@ -1,0 +1,37 @@
+[
+  {
+    "Name": "Hans",
+    "Description": "Hans is Hans.\r\n\r\nHans like explosives. Hans lose leg in explosives. Hans no like explosives.",
+    "PresetName": "Narrator",
+    "Hotkey": "",
+    "PortraitPath": "C:\\Users\\Stefano\\Downloads\\wmremove-transformed (8).jpeg"
+  },
+  {
+    "Name": "New NPC",
+    "Description": "dsdasdsadasdas",
+    "PresetName": "Demon",
+    "Hotkey": "",
+    "PortraitPath": "Assets\\NPCPortraits\\6cd8b4a3722a2ec33d5eea8a69e32172.jpg"
+  },
+  {
+    "Name": "New NPC2",
+    "Description": "sdsadsadas",
+    "PresetName": "Ghost",
+    "Hotkey": "",
+    "PortraitPath": ""
+  },
+  {
+    "Name": "New NPC",
+    "Description": "",
+    "PresetName": "",
+    "Hotkey": "",
+    "PortraitPath": "Assets\\NPCPortraits\\726270073_4033557090109992_7787675203515462137_n.jpg"
+  },
+  {
+    "Name": "New NPC",
+    "Description": "",
+    "PresetName": "",
+    "Hotkey": "",
+    "PortraitPath": "Assets\\NPCPortraits\\ead5b9c4-df8d-4f1a-a66a-058af30818bf.jpg"
+  }
+]

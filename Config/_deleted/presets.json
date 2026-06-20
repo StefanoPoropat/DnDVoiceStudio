@@ -1,0 +1,112 @@
+﻿[
+  {
+    "Name": "Narrator",
+    "Pitch": 0,
+    "Formant": 0,
+    "BassBoost": 0,
+    "TrebleBoost": 0,
+    "Compression": 15,
+    "Reverb": 0,
+    "Distortion": 0,
+    "IsAiVoice": false
+  },
+  {
+    "Name": "Goblin",
+    "Pitch": 7,
+    "Formant": 10,
+    "BassBoost": -15,
+    "TrebleBoost": 18,
+    "Compression": 30,
+    "Reverb": 0,
+    "Distortion": 5,
+    "IsAiVoice": false
+  },
+  {
+    "Name": "Orc",
+    "Pitch": -6,
+    "Formant": -6,
+    "BassBoost": 18,
+    "TrebleBoost": -8,
+    "Compression": 45,
+    "Reverb": 5,
+    "Distortion": 10,
+    "IsAiVoice": false
+  },
+  {
+    "Name": "Ghost",
+    "Pitch": 4,
+    "Formant": 6,
+    "BassBoost": -12,
+    "TrebleBoost": 20,
+    "Compression": 15,
+    "Reverb": 40,
+    "Distortion": 0,
+    "IsAiVoice": false
+  },
+  {
+    "Name": "Dragon",
+    "Pitch": -10,
+    "Formant": -8,
+    "BassBoost": 30,
+    "TrebleBoost": -12,
+    "Compression": 60,
+    "Reverb": 25,
+    "Distortion": 35,
+    "IsAiVoice": false
+  },
+  {
+    "Name": "Demon",
+    "Pitch": -8,
+    "Formant": -10,
+    "BassBoost": 25,
+    "TrebleBoost": -15,
+    "Compression": 55,
+    "Reverb": 15,
+    "Distortion": 50,
+    "IsAiVoice": false
+  },
+  {
+    "Name": "Elf",
+    "Pitch": 2,
+    "Formant": 5,
+    "BassBoost": -5,
+    "TrebleBoost": 10,
+    "Compression": 10,
+    "Reverb": 10,
+    "Distortion": 0,
+    "IsAiVoice": false
+  },
+  {
+    "Name": "Ancient Wizard",
+    "Pitch": -2,
+    "Formant": -1,
+    "BassBoost": 5,
+    "TrebleBoost": 4,
+    "Compression": 20,
+    "Reverb": 20,
+    "Distortion": 0,
+    "IsAiVoice": false
+  },
+  {
+    "Name": "Skeleton",
+    "Pitch": 6,
+    "Formant": 8,
+    "BassBoost": -20,
+    "TrebleBoost": 15,
+    "Compression": 25,
+    "Reverb": 5,
+    "Distortion": 10,
+    "IsAiVoice": false
+  },
+  {
+    "Name": "Dark Lord",
+    "Pitch": -5,
+    "Formant": -4,
+    "BassBoost": 15,
+    "TrebleBoost": -5,
+    "Compression": 50,
+    "Reverb": 30,
+    "Distortion": 15,
+    "IsAiVoice": false
+  }
+]

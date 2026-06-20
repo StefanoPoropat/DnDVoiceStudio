@@ -6,17 +6,23 @@ namespace DnDVoiceStudio.Services;
 
 public class PresetService
 {
-    private readonly string _presetPath =
-        Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
-        "Config",
-        "presets.json");
+    private readonly string _filePath =
+        Path.Combine(
+            Directory.GetParent(
+                AppDomain.CurrentDomain.BaseDirectory)!
+            .Parent!
+            .Parent!
+            .Parent!
+            .FullName,
+            "Data",
+            "presets.json");
 
     public List<VoicePreset> LoadPresets()
     {
-        if (!File.Exists(_presetPath))
+        if (!File.Exists(_filePath))
             return new();
 
-        string json = File.ReadAllText(_presetPath);
+        string json = File.ReadAllText(_filePath);
 
         return JsonSerializer.Deserialize<List<VoicePreset>>(json)
                ?? new();
@@ -32,6 +38,6 @@ public class PresetService
                     WriteIndented = true
                 });
 
-        File.WriteAllText(_presetPath, json);
+        File.WriteAllText(_filePath, json);
     }
 }
