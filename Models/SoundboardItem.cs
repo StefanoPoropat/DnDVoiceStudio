@@ -7,4 +7,6 @@ public class SoundboardItem
     public string FilePath { get; set; } = "";
 
     public string Category { get; set; } = "";
+
+    public bool IsFavorite { get; set; }
 }

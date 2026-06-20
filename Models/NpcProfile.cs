@@ -18,4 +18,15 @@ public partial class NpcProfile : ObservableObject
 
     [ObservableProperty]
     private string portraitPath = "";
+
+    [ObservableProperty]
+    private string category = "General";
+
+    [ObservableProperty]
+    private string notes = "";
+
+    [ObservableProperty]
+    private string campaign = "";
+
+
 }

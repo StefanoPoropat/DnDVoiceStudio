@@ -81,6 +81,17 @@ public partial class MainViewModel : ObservableObject
     [ObservableProperty]
     private NpcProfile? activeNpc;
 
+    private readonly CampaignService
+    _campaignService = new();
+
+    public ObservableCollection<Campaign>
+    Campaigns
+    { get; } = new();
+
+    public ObservableCollection<NpcProfile>
+    FilteredNpcs
+    { get; } = new();
+
     //------------------------------------------------------------------------
 
     private float _currentDemon;
@@ -183,6 +194,7 @@ public partial class MainViewModel : ObservableObject
 
         LoadNpcs();
 
+        LoadCampaigns();
 
         _audioEngine.LevelChanged += level =>
         {
@@ -880,6 +892,8 @@ AiModels
         ActiveNpc = SelectedNpc;
         OnPropertyChanged(
     nameof(CurrentActiveNpcPortrait));
+
+        RefreshNpcFilter();
     }
 
     [RelayCommand]
@@ -945,6 +959,8 @@ AiModels
 
         OnPropertyChanged(
             nameof(CurrentNpcPortrait));
+
+        RefreshNpcFilter();
     }
     [RelayCommand]
     private void DeleteNpc()
@@ -959,39 +975,39 @@ AiModels
             Npcs.FirstOrDefault();
 
         _npcService.SaveNpcs(Npcs);
+
+        RefreshNpcFilter();
     }
     [RelayCommand]
-    private void ActivateNpc()
+    private void ActivateNpc(
+    NpcProfile? npc)
     {
-        if (SelectedNpc == null)
+        npc ??= SelectedNpc;
+
+        if (npc == null)
             return;
 
         var preset =
             VoicePresets.FirstOrDefault(
                 p => p.Name ==
-                     SelectedNpc.PresetName);
+                     npc.PresetName);
 
         if (preset == null)
             return;
 
+        ActiveNpc = npc;
+
         SelectVoice(preset);
 
-        ActiveNpc = SelectedNpc;
-
-        OnPropertyChanged(
-            nameof(CurrentActiveNpcPortrait));
-
         StatusMessage =
-            $"Activated NPC: {SelectedNpc.Name}";
+            $"Activated NPC: {npc.Name}";
     }
 
     public string CurrentActiveNpcPortrait
     {
         get
         {
-            if (ActiveNpc == null ||
-                string.IsNullOrWhiteSpace(
-                    ActiveNpc.PortraitPath))
+            if (ActiveNpc == null)
             {
                 return Path.Combine(
                     AppDomain.CurrentDomain.BaseDirectory,
@@ -1088,5 +1104,110 @@ AiModels
 
     [ObservableProperty]
     private string? pendingPortraitPath;
+
+    public ObservableCollection<NpcProfile>
+    SessionNpcs => FilteredNpcs;
+
+    partial void OnActiveNpcChanged(
+    NpcProfile? value)
+    {
+        OnPropertyChanged(
+            nameof(CurrentActiveNpcPortrait));
+    }
+
+    [ObservableProperty]
+    private Campaign? selectedCampaign;
+
+    partial void OnSelectedCampaignChanged(
+    Campaign? value)
+    {
+        RefreshNpcFilter();
+    }
+
+    private void LoadCampaigns()
+    {
+        Campaigns.Clear();
+
+        Campaigns.Add(
+    new Campaign
+    {
+        Name = "All Campaigns"
+    });
+
+        foreach (var campaign in
+                 _campaignService.LoadCampaigns())
+        {
+            Campaigns.Add(campaign);
+        }
+
+        SelectedCampaign =
+            Campaigns.FirstOrDefault();
+    }
+
+    [RelayCommand]
+    private void NewCampaign()
+    {
+        var campaign =
+            new Campaign
+            {
+                Name = "New Campaign"
+            };
+
+        Campaigns.Add(campaign);
+
+        SelectedCampaign =
+            campaign;
+    }
+
+    [RelayCommand]
+    private void SaveCampaigns()
+    {
+        _campaignService
+            .SaveCampaigns(Campaigns);
+
+        StatusMessage =
+            $"Saved {Campaigns.Count} campaigns";
+    }
+
+    [RelayCommand]
+    private void DeleteCampaign()
+    {
+        if (SelectedCampaign == null)
+            return;
+
+        Campaigns.Remove(
+            SelectedCampaign);
+
+        SelectedCampaign =
+            Campaigns.FirstOrDefault();
+
+        _campaignService
+            .SaveCampaigns(Campaigns);
+    }
+    private void RefreshNpcFilter()
+    {
+        FilteredNpcs.Clear();
+
+        if (SelectedCampaign == null ||
+            SelectedCampaign.Name ==
+            "All Campaigns")
+        {
+            foreach (var npc in Npcs)
+            {
+                FilteredNpcs.Add(npc);
+            }
+
+            return;
+        }
+
+        foreach (var npc in Npcs)
+        {
+            if (npc.Campaign ==
+                SelectedCampaign.Name)
+            {
+                FilteredNpcs.Add(npc);
+            }
+        }
+    }
 
 }
