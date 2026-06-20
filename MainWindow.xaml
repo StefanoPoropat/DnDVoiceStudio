@@ -56,7 +56,6 @@
                 <ColumnDefinition Width="320"/>
                 <ColumnDefinition Width="260"/>
                 <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="300"/>
 
             </Grid.ColumnDefinitions>
 
@@ -465,172 +464,294 @@
                 </ListBox>
 
             </GroupBox>
-
-            <!-- SOUNDBOARD -->
             
-            <GroupBox
-                Grid.Column="2"
-                Header="Soundboard"
-                Margin="0,0,10,0">
-                
-                
+            
+            
+            <!-- SOUNDBOARD -->
 
-                <DockPanel Margin="10">
+            <!-- RIGHT PANEL -->
 
-                    <StackPanel
-                        DockPanel.Dock="Top"
-                        Orientation="Horizontal"
-                        Margin="0,0,0,10">
+            <TabControl Grid.Column="2">
 
-                        <Button
-                            Width="120"
-                            Height="35"
-                            Content="Stop All"
-                            Command="{Binding StopAllSoundsCommand}" />
+                <!-- SOUNDBOARD -->
 
-                        <TextBox
-                            Width="300"
-                            Height="35"
-                            Margin="10,0,0,0"
-                            Text="{Binding SoundSearch,
-                                   UpdateSourceTrigger=PropertyChanged}" />
+                <TabItem Header="Soundboard">
 
-                    </StackPanel>
+                    <GroupBox Header="Soundboard">
 
-                    <ListBox
-                        ItemsSource="{Binding SoundboardItems}">
+                        <DockPanel Margin="10">
 
-                        <ListBox.ItemTemplate>
+                            <StackPanel
+                    DockPanel.Dock="Top"
+                    Orientation="Horizontal"
+                    Margin="0,0,0,10">
 
-                            <DataTemplate>
+                                <Button
+                        Width="120"
+                        Height="35"
+                        Content="Stop All"
+                        Command="{Binding StopAllSoundsCommand}" />
 
-                                <Border
-                                    Margin="4"
-                                    Padding="10"
-                                    BorderBrush="Gray"
-                                    BorderThickness="1"
-                                    CornerRadius="5">
+                                <TextBox
+                        Width="300"
+                        Height="35"
+                        Margin="10,0,0,0"
+                        Text="{Binding SoundSearch,
+                               UpdateSourceTrigger=PropertyChanged}" />
 
-                                    <Grid>
+                            </StackPanel>
 
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="*" />
-                                            <ColumnDefinition Width="Auto" />
-                                        </Grid.ColumnDefinitions>
+                            <ListBox
+                    ItemsSource="{Binding SoundboardItems}">
 
-                                        <StackPanel>
+                                <ListBox.ItemTemplate>
 
-                                            <TextBlock
-                                                FontWeight="Bold"
-                                                FontSize="14"
-                                                Text="{Binding Name}" />
+                                    <DataTemplate>
 
-                                            <TextBlock
-                                                FontSize="11"
-                                                Opacity="0.7"
-                                                Text="{Binding Category}" />
+                                        <Border
+                                Margin="4"
+                                Padding="10"
+                                BorderBrush="Gray"
+                                BorderThickness="1"
+                                CornerRadius="5">
 
-                                        </StackPanel>
+                                            <Grid>
 
-                                        <Button
-                                            Grid.Column="1"
-                                            Width="90"
-                                            Height="35"
-                                            Content="Play"
-                                            Command="{Binding DataContext.PlaySoundCommand,
-                                                      RelativeSource={RelativeSource AncestorType=Window}}"
-                                            CommandParameter="{Binding}" />
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                </Grid.ColumnDefinitions>
 
-                                    </Grid>
+                                                <StackPanel>
 
-                                </Border>
-
-                            </DataTemplate>
-
-                        </ListBox.ItemTemplate>
-
-                    </ListBox>
-
-                </DockPanel>
-
-            </GroupBox>
-
-            <!-- AI MODELS -->
-
-            <GroupBox
-                Grid.Column="3"
-                Header="AI Voice Models">
-
-                <DockPanel Margin="10">
-
-                    <StackPanel
-                        DockPanel.Dock="Top"
-                        Margin="0,0,0,10">
-
-                        <Button
-                            Height="35"
-                            Content="Refresh Models"
-                            Command="{Binding RefreshAiModelsCommand}" />
-
-                        <Button
-                            Height="35"
-                            Margin="0,5,0,0"
-                            Content="Check AI Environment"
-                            Command="{Binding CheckAiEnvironmentCommand}" />
-
-                        <TextBlock
-                            Margin="0,10,0,0"
-                            FontWeight="Bold"
-                            Text="{Binding LoadedAiModel,
-                                   StringFormat=Loaded Model: {0}}" />
-
-                    </StackPanel>
-
-                    <ListBox
-                        ItemsSource="{Binding AiModels}">
-
-                        <ListBox.ItemTemplate>
-
-                            <DataTemplate>
-
-                                <Border
-                                    Margin="4"
-                                    Padding="8"
-                                    BorderBrush="Gray"
-                                    BorderThickness="1"
-                                    CornerRadius="5">
-
-                                    <StackPanel>
-
-                                        <TextBlock
+                                                    <TextBlock
                                             FontWeight="Bold"
+                                            FontSize="14"
                                             Text="{Binding Name}" />
 
-                                        <TextBlock
+                                                    <TextBlock
                                             FontSize="11"
                                             Opacity="0.7"
-                                            Text="{Binding ModelPath}" />
+                                            Text="{Binding Category}" />
 
-                                        <Button
-                                            Margin="0,8,0,0"
-                                            Content="Load Model"
-                                            Command="{Binding DataContext.LoadAiModelCommand,
-                                                      RelativeSource={RelativeSource AncestorType=Window}}"
-                                            CommandParameter="{Binding}" />
+                                                </StackPanel>
 
-                                    </StackPanel>
+                                                <Button
+                                        Grid.Column="1"
+                                        Width="90"
+                                        Height="35"
+                                        Content="Play"
+                                        Command="{Binding DataContext.PlaySoundCommand,
+                                                  RelativeSource={RelativeSource AncestorType=Window}}"
+                                        CommandParameter="{Binding}" />
 
-                                </Border>
+                                            </Grid>
 
-                            </DataTemplate>
+                                        </Border>
 
-                        </ListBox.ItemTemplate>
+                                    </DataTemplate>
 
-                    </ListBox>
+                                </ListBox.ItemTemplate>
 
-                </DockPanel>
+                            </ListBox>
 
-            </GroupBox>
+                        </DockPanel>
+
+                    </GroupBox>
+
+                </TabItem>
+
+                <!-- AI MODELS -->
+
+                <TabItem Header="AI Models">
+
+                    <GroupBox Header="AI Voice Models">
+
+                        <DockPanel Margin="10">
+
+                            <StackPanel
+                    DockPanel.Dock="Top"
+                    Margin="0,0,0,10">
+
+                                <Button
+                        Height="35"
+                        Content="Refresh Models"
+                        Command="{Binding RefreshAiModelsCommand}" />
+
+                                <Button
+                        Height="35"
+                        Margin="0,5,0,0"
+                        Content="Check AI Environment"
+                        Command="{Binding CheckAiEnvironmentCommand}" />
+
+                                <TextBlock
+                        Margin="0,10,0,0"
+                        FontWeight="Bold"
+                        Text="{Binding LoadedAiModel,
+                               StringFormat=Loaded Model: {0}}" />
+
+                            </StackPanel>
+
+                            <ListBox
+                    ItemsSource="{Binding AiModels}">
+
+                                <ListBox.ItemTemplate>
+
+                                    <DataTemplate>
+
+                                        <Border
+                                Margin="4"
+                                Padding="8"
+                                BorderBrush="Gray"
+                                BorderThickness="1"
+                                CornerRadius="5">
+
+                                            <StackPanel>
+
+                                                <TextBlock
+                                        FontWeight="Bold"
+                                        Text="{Binding Name}" />
+
+                                                <TextBlock
+                                        FontSize="11"
+                                        Opacity="0.7"
+                                        Text="{Binding ModelPath}" />
+
+                                                <Button
+                                        Margin="0,8,0,0"
+                                        Content="Load Model"
+                                        Command="{Binding DataContext.LoadAiModelCommand,
+                                                  RelativeSource={RelativeSource AncestorType=Window}}"
+                                        CommandParameter="{Binding}" />
+
+                                            </StackPanel>
+
+                                        </Border>
+
+                                    </DataTemplate>
+
+                                </ListBox.ItemTemplate>
+
+                            </ListBox>
+
+                        </DockPanel>
+
+                    </GroupBox>
+
+                </TabItem>
+
+                <!-- NPC LIBRARY -->
+
+                <TabItem Header="NPC Library">
+
+                    <Grid Margin="10">
+
+                        <Grid.ColumnDefinitions>
+
+                            <ColumnDefinition Width="250"/>
+
+                            <ColumnDefinition Width="*"/>
+
+                        </Grid.ColumnDefinitions>
+
+                        <!-- LEFT -->
+
+                        <StackPanel>
+
+                            <Button
+                    Height="35"
+                    Content="New NPC"
+                    Command="{Binding NewNpcCommand}" />
+
+                            <Button
+                    Height="35"
+                    Margin="0,5,0,0"
+                    Content="Delete NPC"
+                    Command="{Binding DeleteNpcCommand}" />
+
+                            <ListBox
+                    Margin="0,10,0,0"
+                    ItemsSource="{Binding Npcs}"
+                    SelectedItem="{Binding SelectedNpc}">
+
+                                <ListBox.ItemTemplate>
+
+                                    <DataTemplate>
+
+                                        <Border
+                                Margin="2"
+                                Padding="6">
+
+                                            <TextBlock
+                                    FontWeight="Bold"
+                                    Text="{Binding Name}" />
+
+                                        </Border>
+
+                                    </DataTemplate>
+
+                                </ListBox.ItemTemplate>
+
+                            </ListBox>
+
+                        </StackPanel>
+
+                        <!-- RIGHT -->
+
+                        <StackPanel
+                Grid.Column="1"
+                Margin="10,0,0,0">
+
+                            <TextBlock
+                    FontWeight="Bold"
+                    Text="NPC Name"/>
+
+                            <TextBox
+                    Margin="0,5,0,0"
+                    Text="{Binding SelectedNpc.Name}" />
+
+                            <TextBlock
+                    Margin="0,15,0,0"
+                    FontWeight="Bold"
+                    Text="Description"/>
+
+                            <TextBox
+                    Height="120"
+                    AcceptsReturn="True"
+                    TextWrapping="Wrap"
+                    Text="{Binding SelectedNpc.Description}" />
+
+                            <TextBlock
+                    Margin="0,15,0,0"
+                    FontWeight="Bold"
+                    Text="Voice Preset"/>
+
+                            <ComboBox
+                    Margin="0,5,0,0"
+                    ItemsSource="{Binding VoicePresets}"
+                    DisplayMemberPath="Name"
+                    SelectedValuePath="Name"
+                    SelectedValue="{Binding SelectedNpc.PresetName}" />
+
+                            <Button
+                    Margin="0,15,0,0"
+                    Height="35"
+                    Content="Activate NPC"
+                    Command="{Binding ActivateNpcCommand}" />
+
+                            <Button
+                    Margin="0,5,0,0"
+                    Height="35"
+                    Content="Save NPC Library"
+                    Command="{Binding SaveNpcCommand}" />
+
+                        </StackPanel>
+
+                    </Grid>
+
+                </TabItem>
+
+            </TabControl>
 
         </Grid>
 

@@ -69,6 +69,14 @@ public partial class MainViewModel : ObservableObject
     private readonly VoiceMorphService
     _morphService = new();
 
+    private readonly NpcLibraryService
+    _npcService = new();
+
+    public ObservableCollection<NpcProfile>
+    Npcs
+    { get; }
+    = new();
+
     //------------------------------------------------------------------------
 
     private float _currentDemon;
@@ -168,6 +176,8 @@ public partial class MainViewModel : ObservableObject
         LoadSounds();
 
         RefreshAiModels();
+
+        LoadNpcs();
 
         _audioEngine.LevelChanged += level =>
         {
@@ -828,6 +838,82 @@ AiModels
 
         StatusMessage =
             $"Morphed: {result.Name}";
+    }
+
+    [ObservableProperty]
+    private NpcProfile? selectedNpc;
+
+    private void LoadNpcs()
+    {
+        Npcs.Clear();
+
+        foreach (var npc in
+                 _npcService.LoadNpcs())
+        {
+            Npcs.Add(npc);
+        }
+    }
+
+    [RelayCommand]
+    private void NewNpc()
+    {
+        var npc = new NpcProfile
+        {
+            Name =
+                $"NPC {Npcs.Count + 1}"
+        };
+
+        Npcs.Add(npc);
+
+        SelectedNpc = npc;
+
+        _npcService.SaveNpcs(Npcs);
+    }
+
+    [RelayCommand]
+    private void SaveNpc()
+    {
+        _npcService.SaveNpcs(Npcs);
+
+        StatusMessage =
+            "NPC Library Saved";
+    }
+    [RelayCommand]
+    private void DeleteNpc()
+    {
+        if (SelectedNpc == null)
+            return;
+
+        Npcs.Remove(
+            SelectedNpc);
+
+        _npcService.SaveNpcs(
+            Npcs);
+
+        SelectedNpc =
+            Npcs.FirstOrDefault();
+    }
+    [RelayCommand]
+    private void ActivateNpc()
+    {
+        if (SelectedNpc == null)
+            return;
+
+        var preset =
+            VoicePresets
+            .FirstOrDefault(
+                p =>
+                p.Name ==
+                SelectedNpc.PresetName);
+
+        if (preset == null)
+            return;
+
+        SelectVoiceCommand
+            .Execute(preset);
+
+        StatusMessage =
+            $"Activated NPC: {SelectedNpc.Name}";
     }
 
 }
