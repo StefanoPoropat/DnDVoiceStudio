@@ -13,7 +13,7 @@
     "Whisper": 0,
     "Radio": 0,
     "Titan": 0,
-    "Hotkey": ""
+    "Hotkey": "F1"
   },
   {
     "Name": "Goblin",
@@ -29,7 +29,7 @@
     "Whisper": 0,
     "Radio": 0,
     "Titan": 0,
-    "Hotkey": ""
+    "Hotkey": "F2"
   },
   {
     "Name": "Orc",

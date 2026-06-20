@@ -78,6 +78,9 @@ public partial class MainViewModel : ObservableObject
     { get; }
     = new();
 
+    [ObservableProperty]
+    private NpcProfile? activeNpc;
+
     //------------------------------------------------------------------------
 
     private float _currentDemon;
@@ -874,6 +877,9 @@ AiModels
 
         SelectedNpc =
             Npcs.FirstOrDefault();
+        ActiveNpc = SelectedNpc;
+        OnPropertyChanged(
+    nameof(CurrentActiveNpcPortrait));
     }
 
     [RelayCommand]
@@ -970,8 +976,34 @@ AiModels
 
         SelectVoice(preset);
 
+        ActiveNpc = SelectedNpc;
+
+        OnPropertyChanged(
+            nameof(CurrentActiveNpcPortrait));
+
         StatusMessage =
             $"Activated NPC: {SelectedNpc.Name}";
+    }
+
+    public string CurrentActiveNpcPortrait
+    {
+        get
+        {
+            if (ActiveNpc == null ||
+                string.IsNullOrWhiteSpace(
+                    ActiveNpc.PortraitPath))
+            {
+                return Path.Combine(
+                    AppDomain.CurrentDomain.BaseDirectory,
+                    "Assets",
+                    "NPCPortraits",
+                    "default.png");
+            }
+
+            return Path.Combine(
+                AppDomain.CurrentDomain.BaseDirectory,
+                ActiveNpc.PortraitPath);
+        }
     }
 
     [RelayCommand]

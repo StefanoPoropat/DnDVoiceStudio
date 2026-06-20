@@ -3,13 +3,13 @@
     "Name": "Hans",
     "Description": "Hans is Hans.\r\n\r\nHans like explosives. Hans lose leg in explosives. Hans no like explosives.",
     "PresetName": "Narrator",
-    "Hotkey": "",
+    "Hotkey": "F1",
     "PortraitPath": "C:\\Users\\Stefano\\Downloads\\wmremove-transformed (8).jpeg"
   },
   {
     "Name": "New NPC",
     "Description": "dsdasdsadasdas",
-    "PresetName": "Demon",
+    "PresetName": "Goblin",
     "Hotkey": "",
     "PortraitPath": "Assets\\NPCPortraits\\6cd8b4a3722a2ec33d5eea8a69e32172.jpg"
   },
@@ -33,5 +33,12 @@
     "PresetName": "",
     "Hotkey": "",
     "PortraitPath": "Assets\\NPCPortraits\\ead5b9c4-df8d-4f1a-a66a-058af30818bf.jpg"
+  },
+  {
+    "Name": "New NPCaaaaa",
+    "Description": "dsdsdadasd",
+    "PresetName": "Ghost",
+    "Hotkey": "",
+    "PortraitPath": "Assets\\NPCPortraits\\3091ba11-c56c-4db9-a624-363f5f0c5664.jpg"
   }
 ]

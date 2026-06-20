@@ -47,7 +47,7 @@ public partial class MainWindow : Window
     }
 
     private void OnHotkeyPressed(
-    Key key)
+       Key key)
     {
         if (DataContext is not
             MainViewModel vm)
@@ -56,16 +56,28 @@ public partial class MainWindow : Window
         string keyName =
             key.ToString();
 
-        var preset =
-            vm.VoicePresets
-              .FirstOrDefault(
-                  p => p.Hotkey ==
-                       keyName);
+        var npc =
+            vm.Npcs.FirstOrDefault(
+                n => n.Hotkey == keyName);
 
-        if (preset == null)
+        if (npc != null)
+        {
+            vm.SelectedNpc = npc;
+
+            vm.ActivateNpcCommand
+                .Execute(null);
+
             return;
+        }
 
-        vm.SelectVoiceCommand
-          .Execute(preset);
+        var preset =
+            vm.VoicePresets.FirstOrDefault(
+                p => p.Hotkey == keyName);
+
+        if (preset != null)
+        {
+            vm.SelectVoiceCommand
+                .Execute(preset);
+        }
     }
 }
