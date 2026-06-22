@@ -34,6 +34,7 @@ public partial class MainWindow : Window
         };
 
         _hotkeys.HotkeyPressed += OnHotkeyPressed;
+        PreviewKeyDown += MainWindow_PreviewKeyDown;
     }
 
     private readonly HotkeyService
@@ -80,4 +81,15 @@ public partial class MainWindow : Window
                 .Execute(preset);
         }
     }
+    private void MainWindow_PreviewKeyDown(
+    object sender,
+    KeyEventArgs e)
+    {
+        if (DataContext is not MainViewModel vm)
+            return;
+
+        vm.HandleSoundHotkey(
+            e.Key.ToString());
+    }
+
 }

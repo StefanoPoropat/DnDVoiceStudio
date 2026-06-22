@@ -1,7 +1,12 @@
 [
   {
-    "Name": "Final-Nice to meet you",
+    "Name": "Fireball",
     "IsFavorite": true,
     "Hotkey": ""
+  },
+  {
+    "Name": "Final-Nice to meet you",
+    "IsFavorite": true,
+    "Hotkey": "NumPad1"
   }
 ]

@@ -7,17 +7,17 @@
     "PortraitPath": "Assets\\NPCPortraits\\a477e594-2a7f-4c0c-81ee-a41c0f2498f4.jpeg",
     "Category": "Military",
     "Notes": "Owes an arm and a leg",
-    "Campaign": "Solid state drive"
+    "Campaign": "All Campaigns"
   },
   {
     "Name": "New NPC",
     "Description": "dsdasdsadasdas",
     "PresetName": "Goblin",
-    "Hotkey": "",
+    "Hotkey": "F2",
     "PortraitPath": "Assets\\NPCPortraits\\c5ae77c8-8d20-49b0-8492-f0e3ea64aed1.jpg",
     "Category": "General",
     "Notes": "",
-    "Campaign": ""
+    "Campaign": "All Campaigns"
   },
   {
     "Name": "New NPC2",
@@ -27,7 +27,7 @@
     "PortraitPath": "",
     "Category": "General",
     "Notes": "",
-    "Campaign": ""
+    "Campaign": "All Campaigns"
   },
   {
     "Name": "New NPC",
@@ -37,7 +37,7 @@
     "PortraitPath": "Assets\\NPCPortraits\\b7f6db4c-32f8-4426-a847-50ec7d1e1775.jpg",
     "Category": "General",
     "Notes": "",
-    "Campaign": ""
+    "Campaign": "All Campaigns"
   },
   {
     "Name": "New NPC",
@@ -47,17 +47,17 @@
     "PortraitPath": "Assets\\NPCPortraits\\10745e58-d737-4889-a242-1a6502ed7950.jpg",
     "Category": "General",
     "Notes": "",
-    "Campaign": ""
+    "Campaign": "All Campaigns"
   },
   {
     "Name": "New NPCaaaaa",
     "Description": "dsdsdadasd",
     "PresetName": "Demon Narrator",
-    "Hotkey": "",
+    "Hotkey": "F3",
     "PortraitPath": "Assets\\NPCPortraits\\adfe18be-91ad-4288-8efd-00c0ba436a97.png",
     "Category": "General",
     "Notes": "",
-    "Campaign": ""
+    "Campaign": "lol"
   },
   {
     "Name": "New NPC777",

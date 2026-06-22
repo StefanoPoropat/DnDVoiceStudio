@@ -397,26 +397,62 @@
 
                                 <!-- PRESET BUTTONS -->
 
-                                <WrapPanel Margin="0,20,0,0">
+                                <GroupBox Header="Preset Actions"
+          Margin="0,0,0,10">
 
-                                    <Button
-                    Width="85"
-                    Content="New"
-                    Command="{Binding NewPresetCommand}" />
+                                    <WrapPanel Margin="5">
 
-                                    <Button
-                    Width="85"
-                    Margin="10,0,0,0"
-                    Content="Save"
-                    Command="{Binding SavePresetCommand}" />
+                                        <Button Content="New"
+                Margin="4"
+                Padding="12,6"
+                Command="{Binding NewPresetCommand}" />
 
-                                    <Button
-                    Width="85"
-                    Margin="10,0,0,0"
-                    Content="Delete"
-                    Command="{Binding DeletePresetCommand}" />
+                                        <Button Content="Save"
+                Margin="4"
+                Padding="12,6"
+                Command="{Binding SavePresetCommand}" />
 
-                                </WrapPanel>
+                                        <Button Content="Duplicate"
+                Margin="4"
+                Padding="12,6"
+                Command="{Binding DuplicatePresetCommand}" />
+
+                                        <Button Content="Delete"
+                Margin="4"
+                Padding="12,6"
+                Command="{Binding DeletePresetCommand}" />
+
+                                    </WrapPanel>
+
+                                </GroupBox>
+
+                                <GroupBox Header="Import / Export">
+
+                                    <WrapPanel Margin="5">
+
+                                        <Button Content="Import"
+                Margin="4"
+                Padding="12,6"
+                Command="{Binding ImportPresetCommand}" />
+
+                                        <Button Content="Export"
+                Margin="4"
+                Padding="12,6"
+                Command="{Binding ExportPresetCommand}" />
+
+                                        <Button Content="Import Pack"
+                Margin="4"
+                Padding="12,6"
+                Command="{Binding ImportPresetPackCommand}" />
+
+                                        <Button Content="Export Pack"
+                Margin="4"
+                Padding="12,6"
+                Command="{Binding ExportPresetPackCommand}" />
+
+                                    </WrapPanel>
+
+                                </GroupBox>
 
                             </StackPanel>
 
@@ -481,31 +517,78 @@
 
                         <DockPanel Margin="10">
 
-                            <StackPanel
-                    DockPanel.Dock="Top"
-                    Orientation="Horizontal"
-                    Margin="0,0,0,10">
+                            <Grid DockPanel.Dock="Top"
+      Margin="0,0,0,10">
 
-                                <Button
-                        Width="120"
-                        Height="35"
-                        Content="Stop All"
-                        Command="{Binding StopAllSoundsCommand}" />
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
 
-                                <ComboBox
-    Width="150"
-    Margin="0,0,10,0"
-    ItemsSource="{Binding SoundCategories}"
-    SelectedItem="{Binding SelectedSoundCategory}" />
+                                <!-- SEARCH ROW -->
 
-                                <TextBox
-                        Width="300"
-                        Height="35"
-                        Margin="10,0,0,0"
-                        Text="{Binding SoundSearch,
-                               UpdateSourceTrigger=PropertyChanged}" />
+                                <StackPanel
+        Grid.Row="0"
+        Orientation="Horizontal"
+        Margin="0,0,0,10">
 
-                            </StackPanel>
+                                    <TextBlock
+            VerticalAlignment="Center"
+            Margin="0,0,5,0"
+            Text="Category"/>
+
+                                    <ComboBox
+            Width="150"
+            Margin="0,0,15,0"
+            ItemsSource="{Binding SoundCategories}"
+            SelectedItem="{Binding SelectedSoundCategory}" />
+
+                                    <TextBlock
+            VerticalAlignment="Center"
+            Margin="0,0,5,0"
+            Text="Search"/>
+
+                                    <TextBox
+            Width="300"
+            Height="28"
+            Text="{Binding SoundSearch,
+                           UpdateSourceTrigger=PropertyChanged}" />
+
+                                </StackPanel>
+
+                                <!-- CONTROL ROW -->
+
+                                <StackPanel
+        Grid.Row="1"
+        Orientation="Horizontal">
+
+                                    <TextBlock
+            VerticalAlignment="Center"
+            Margin="0,0,10,0"
+            Text="Volume"/>
+
+                                    <Slider
+            Width="250"
+            Minimum="0"
+            Maximum="1"
+            Value="{Binding SoundboardVolume}" />
+
+                                    <Button
+            Width="120"
+            Height="35"
+            Margin="20,0,10,0"
+            Content="Stop All"
+            Command="{Binding StopAllSoundsCommand}" />
+
+                                    <Button
+            Width="120"
+            Height="35"
+            Content="Save Hotkeys"
+            Command="{Binding SaveSoundboardCommand}" />
+
+                                </StackPanel>
+
+                            </Grid>
 
                             <ListBox
                         ItemsSource="{Binding FilteredSoundboardItems}">
@@ -514,11 +597,11 @@
                                     <DataTemplate>
 
                                         <Border
-                                Margin="4"
-                                Padding="10"
-                                BorderBrush="Gray"
-                                BorderThickness="1"
-                                CornerRadius="5">
+    Margin="5"
+    Padding="10"
+    BorderBrush="Gray"
+    BorderThickness="1"
+    CornerRadius="5">
 
                                             <Grid>
 
@@ -528,47 +611,75 @@
                                                 </Grid.ColumnDefinitions>
 
                                                 <StackPanel>
+                                                    <TextBlock
+                Text="{Binding Name}"
+                FontWeight="Bold"
+                FontSize="18" />
 
                                                     <TextBlock
-                                            FontWeight="Bold"
-                                            FontSize="14"
-                                            Text="{Binding Name}" />
+                Text="{Binding Category}"
+                Opacity="0.7" />
+                                                    <ToggleButton
+    Width="50"
+    Content="🔁"
+    IsChecked="{Binding Loop}" />
+                                                </StackPanel>
 
-                                                    <TextBlock
-                                            FontSize="11"
-                                            Opacity="0.7"
-                                            Text="{Binding Category}" />
+                                                <StackPanel
+            Grid.Column="1"
+            Orientation="Horizontal"
+            VerticalAlignment="Center">
+
+                                                    <Button
+            Width="90"
+            Height="35"
+            Margin="0,0,5,0"
+            Content="Play"
+            Command="{Binding DataContext.PlaySoundCommand,
+                              RelativeSource={RelativeSource AncestorType=Window}}"
+            CommandParameter="{Binding}" />
+
+                                                    <!-- Stop -->
+
+                                                    <Button
+            Width="35"
+            Height="35"
+            Content="■"
+            Command="{Binding DataContext.StopSoundCommand,
+                              RelativeSource={RelativeSource AncestorType=Window}}"
+            CommandParameter="{Binding}" />
 
                                                     <ToggleButton
-    Width="40"
-    Height="35"
-    FontSize="18"
-    FontWeight="Bold"
-    IsChecked="{Binding IsFavorite}"
-    Command="{Binding DataContext.ToggleFavoriteCommand,
-              RelativeSource={RelativeSource AncestorType=Window}}"
-    CommandParameter="{Binding}">
+            Width="40"
+            Height="35"
+            Margin="0,0,5,0"
+            FontSize="18"
+            FontWeight="Bold"
+            IsChecked="{Binding IsFavorite}"
+            Command="{Binding DataContext.ToggleFavoriteCommand,
+                              RelativeSource={RelativeSource AncestorType=Window}}"
+            CommandParameter="{Binding}">
 
                                                         <ToggleButton.Style>
 
                                                             <Style TargetType="ToggleButton">
 
                                                                 <Setter Property="Content"
-                    Value="☆"/>
+                            Value="☆"/>
 
                                                                 <Setter Property="Opacity"
-                    Value="0.5"/>
+                            Value="0.5"/>
 
                                                                 <Style.Triggers>
 
                                                                     <Trigger Property="IsChecked"
-                         Value="True">
+                                 Value="True">
 
                                                                         <Setter Property="Content"
-                            Value="★"/>
+                                    Value="★"/>
 
                                                                         <Setter Property="Opacity"
-                            Value="1"/>
+                                    Value="1"/>
 
                                                                     </Trigger>
 
@@ -579,17 +690,22 @@
                                                         </ToggleButton.Style>
 
                                                     </ToggleButton>
+                                                    <StackPanel Orientation="Horizontal">
 
+                                                        <TextBlock
+        Text="Hotkey:"
+        Margin="0,0,5,0"/>
+
+                                                        <ComboBox
+    Width="100"
+    Margin="5,0,0,0"
+    SelectedItem="{Binding Hotkey}"
+    ItemsSource="{Binding DataContext.AvailableHotkeys,
+                  RelativeSource={RelativeSource AncestorType=Window}}" />
+
+                                                    </StackPanel>
                                                 </StackPanel>
-
-                                                <Button
-                                        Grid.Column="1"
-                                        Width="90"
-                                        Height="35"
-                                        Content="Play"
-                                        Command="{Binding DataContext.PlaySoundCommand,
-                                                  RelativeSource={RelativeSource AncestorType=Window}}"
-                                        CommandParameter="{Binding}" />
+                                                
 
                                             </Grid>
 

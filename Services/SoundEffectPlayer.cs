@@ -4,51 +4,75 @@ namespace DnDVoiceStudio.Services;
 
 public class SoundEffectPlayer
 {
-    private readonly List<WaveOutEvent> _activeOutputs =
-        new();
+    private readonly Dictionary<string, (WaveOutEvent output, AudioFileReader reader)> _active
+        = new();
 
-    private readonly List<AudioFileReader> _activeReaders =
-        new();
+    private readonly object _lock = new();
 
-    public void Play(string filePath)
+    public void Play(string filePath, float volume, bool loop)
     {
-        var reader =
-            new AudioFileReader(filePath);
-
-        var output =
-            new WaveOutEvent();
-
-        output.Init(reader);
-
-        _activeOutputs.Add(output);
-        _activeReaders.Add(reader);
-
-        output.PlaybackStopped += (_, _) =>
+        lock (_lock)
         {
-            output.Dispose();
-            reader.Dispose();
+            if (_active.TryGetValue(filePath, out var existing))
+            {
+                existing.reader.Position = 0;
+                existing.output.Stop();
+                existing.output.Play();
+                return;
+            }
 
-            _activeOutputs.Remove(output);
-            _activeReaders.Remove(reader);
-        };
+            var reader = new AudioFileReader(filePath)
+            {
+                Volume = volume
+            };
 
-        output.Play();
+            IWaveProvider provider = loop ? new LoopStream(reader) : reader;
+
+            var output = new WaveOutEvent();
+            output.Init(provider);
+
+            _active[filePath] = (output, reader);
+
+            output.PlaybackStopped += (_, _) =>
+            {
+                lock (_lock)
+                {
+                    if (_active.TryGetValue(filePath, out var current) &&
+                        current.output == output)
+                    {
+                        _active.Remove(filePath);
+                    }
+                }
+
+                output.Dispose();
+                reader.Dispose();
+            };
+
+            output.Play();
+        }
+    }
+
+    public void Stop(string filePath)
+    {
+        lock (_lock)
+        {
+            if (_active.TryGetValue(filePath, out var entry))
+            {
+                entry.output.Stop();
+            }
+        }
     }
 
     public void StopAll()
     {
-        foreach (var output in _activeOutputs.ToList())
+        lock (_lock)
         {
-            output.Stop();
+            foreach (var entry in _active.Values.ToList())
+            {
+                entry.output.Stop();
+            }
+
+            _active.Clear();
         }
-
-        _activeOutputs.Clear();
-
-        foreach (var reader in _activeReaders.ToList())
-        {
-            reader.Dispose();
-        }
-
-        _activeReaders.Clear();
     }
 }

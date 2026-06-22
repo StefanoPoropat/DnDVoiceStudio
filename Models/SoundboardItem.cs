@@ -10,4 +10,5 @@ public class SoundboardItem
     public bool IsFavorite { get; set; }
 
     public string Hotkey { get; set; } = "";
+    public bool Loop { get; set; }
 }

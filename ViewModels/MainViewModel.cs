@@ -9,7 +9,9 @@ namespace DnDVoiceStudio.ViewModels;
 using DnDVoiceStudio.Models;
 using DnDVoiceStudio.Services;
 using DnDVoiceStudio.Services.VoicePreview;
+using Microsoft.Win32;
 using System.IO;
+using System.Text.Json;
 
 public partial class MainViewModel : ObservableObject
 {
@@ -96,6 +98,24 @@ public partial class MainViewModel : ObservableObject
     FilteredSoundboardItems
     { get; } = new();
 
+    public ObservableCollection<string>
+AvailableHotkeys
+    { get; } = new()
+{
+    "",
+
+    "NumPad1",
+    "NumPad2",
+    "NumPad3",
+    "NumPad4",
+    "NumPad5",
+    "NumPad6",
+    "NumPad7",
+    "NumPad8",
+    "NumPad9",
+    "NumPad0"
+};
+
 
     //------------------------------------------------------------------------
 
@@ -177,7 +197,7 @@ public partial class MainViewModel : ObservableObject
 
             OnPropertyChanged();
 
-            RefreshSoundList();
+            RefreshSoundboardFilter();
         }
     }
 
@@ -194,6 +214,7 @@ public partial class MainViewModel : ObservableObject
         LoadAudioDevices();
 
         LoadSounds();
+        LoadSoundCategories();
 
         RefreshAiModels();
 
@@ -411,13 +432,30 @@ public partial class MainViewModel : ObservableObject
         UpdateCurrentVoice();
     }
 
+    //SOUNDBOARD STARTS HERE
+
     [RelayCommand]
     private void PlaySound(SoundboardItem item)
     {
         if (item == null)
             return;
 
-        _soundPlayer.Play(item.FilePath);
+        _soundPlayer.Play(
+            item.FilePath,
+            SoundboardVolume,
+            item.Loop);
+        System.Diagnostics.Debug.WriteLine(
+    $"PLAY: {item.Name}");
+    }
+
+    [RelayCommand]
+    private void StopSound(
+    SoundboardItem item)
+    {
+        if (item == null)
+            return;
+
+        _soundPlayer.Stop(item.FilePath);
     }
 
     [RelayCommand]
@@ -425,6 +463,155 @@ public partial class MainViewModel : ObservableObject
     {
         _soundPlayer.StopAll();
     }
+
+    [ObservableProperty]
+    private string selectedSoundCategory = "All";
+
+    public ObservableCollection<string>
+    SoundCategories
+    { get; } = new();
+    private void RefreshSoundboardFilter()
+    {
+        FilteredSoundboardItems.Clear();
+
+        IEnumerable<SoundboardItem> items =
+            SoundboardItems;
+
+        if (!string.IsNullOrWhiteSpace(
+            SoundSearch))
+        {
+            items =
+                items.Where(x =>
+                    x.Name.Contains(
+                        SoundSearch,
+                        StringComparison
+                            .OrdinalIgnoreCase));
+        }
+
+        switch (SelectedSoundCategory)
+        {
+            case "Favorites":
+
+                items =
+                    items.Where(
+                        x => x.IsFavorite);
+
+                break;
+
+            case "All":
+
+                break;
+
+            default:
+
+                items =
+                    items.Where(
+                        x => x.Category ==
+                             SelectedSoundCategory);
+
+                break;
+        }
+
+        foreach (var item in items)
+        {
+            FilteredSoundboardItems.Add(
+                item);
+        }
+    }
+
+    partial void OnSelectedSoundCategoryChanged(
+    string value)
+    {
+        RefreshSoundboardFilter();
+    }
+    [RelayCommand]
+    private void ToggleFavorite(
+     SoundboardItem item)
+    {
+        _soundboardService
+            .SaveMetadata(
+                SoundboardItems);
+
+        RefreshSoundboardFilter();
+    }
+
+    [ObservableProperty]
+    private float soundboardVolume = 1.0f;
+
+    private void LoadSoundCategories()
+    {
+        SoundCategories.Clear();
+
+        SoundCategories.Add("All");
+        SoundCategories.Add("Favorites");
+
+        var categories =
+            SoundboardItems
+                .Select(x => x.Category)
+                .Distinct()
+                .OrderBy(x => x);
+
+        foreach (var category in categories)
+        {
+            SoundCategories.Add(category);
+        }
+    }
+
+    public void HandleSoundHotkey(
+    string key)
+    {
+        var sound =
+            SoundboardItems.FirstOrDefault(
+                s => string.Equals(
+                    s.Hotkey,
+                    key,
+                    StringComparison.OrdinalIgnoreCase));
+
+        if (sound == null)
+            return;
+
+        PlaySound(sound);
+        System.Diagnostics.Debug.WriteLine(
+    $"HOTKEY: {key}");
+    }
+
+    private void ValidateSoundHotkeys()
+    {
+        var usedKeys =
+            new HashSet<string>();
+
+        foreach (var sound in SoundboardItems)
+        {
+            if (string.IsNullOrWhiteSpace(
+                sound.Hotkey))
+            {
+                continue;
+            }
+
+            if (!usedKeys.Add(
+                sound.Hotkey))
+            {
+                StatusMessage =
+                    $"Duplicate hotkey removed from {sound.Name}";
+
+                sound.Hotkey = "";
+            }
+        }
+    }
+
+    [RelayCommand]
+    private void SaveSoundboard()
+    {
+        ValidateSoundHotkeys();
+
+        _soundboardService.SaveMetadata(
+            SoundboardItems);
+
+        StatusMessage =
+            "Soundboard saved";
+    }
+
+    // TBD STARTS HERE
 
     private void UpdateCurrentVoice()
     {
@@ -863,6 +1050,207 @@ AiModels
             $"Morphed: {result.Name}";
     }
 
+    //PRESTES MANIPULATION STARTS HERE
+
+    [RelayCommand]
+    private void DuplicatePreset()
+    {
+        if (CurrentVoice == null)
+            return;
+
+        var copy = new VoicePreset
+        {
+            Name = CurrentVoice.Name + " Copy",
+
+            Pitch = CurrentVoice.Pitch,
+            Formant = CurrentVoice.Formant,
+
+            BassBoost = CurrentVoice.BassBoost,
+            TrebleBoost = CurrentVoice.TrebleBoost,
+
+            Compression = CurrentVoice.Compression,
+            Reverb = CurrentVoice.Reverb,
+            Distortion = CurrentVoice.Distortion,
+
+            Demon = CurrentVoice.Demon,
+            Whisper = CurrentVoice.Whisper,
+            Radio = CurrentVoice.Radio,
+            Titan = CurrentVoice.Titan,
+
+            IsAiVoice = CurrentVoice.IsAiVoice,
+
+            Hotkey = ""
+        };
+
+        VoicePresets.Add(copy);
+
+        CurrentVoice = copy;
+
+        PresetName = copy.Name;
+
+        _presetService.SavePresets(
+            VoicePresets);
+
+        StatusMessage =
+            $"Duplicated preset: {copy.Name}";
+    }
+
+    [RelayCommand]
+    private void ExportPreset()
+    {
+        if (CurrentVoice == null)
+            return;
+
+        var dialog =
+            new SaveFileDialog();
+
+        dialog.Filter =
+            "Preset File|*.json";
+
+        dialog.FileName =
+            CurrentVoice.Name + ".json";
+
+        if (dialog.ShowDialog() != true)
+            return;
+
+        string json =
+            JsonSerializer.Serialize(
+                CurrentVoice,
+                new JsonSerializerOptions
+                {
+                    WriteIndented = true
+                });
+
+        File.WriteAllText(
+            dialog.FileName,
+            json);
+
+        StatusMessage =
+            $"Exported {CurrentVoice.Name}";
+    }
+    [RelayCommand]
+    private void ImportPreset()
+    {
+        var dialog =
+            new OpenFileDialog();
+
+        dialog.Filter =
+            "Preset File|*.json";
+
+        if (dialog.ShowDialog() != true)
+            return;
+
+        try
+        {
+            string json =
+                File.ReadAllText(
+                    dialog.FileName);
+
+            var preset =
+                JsonSerializer.Deserialize<
+                    VoicePreset>(json);
+
+            if (preset == null)
+                return;
+
+            VoicePresets.Add(
+                preset);
+
+            CurrentVoice =
+                preset;
+
+            _presetService.SavePresets(
+                VoicePresets);
+
+            StatusMessage =
+                $"Imported {preset.Name}";
+        }
+        catch
+        {
+            StatusMessage =
+                "Invalid preset file";
+        }
+    }
+
+    [RelayCommand]
+    private void ExportPresetPack()
+    {
+        var dialog =
+            new SaveFileDialog();
+
+        dialog.Filter =
+            "Preset Pack|*.json";
+
+        dialog.FileName =
+            "PresetPack.json";
+
+        if (dialog.ShowDialog() != true)
+            return;
+
+        string json =
+            JsonSerializer.Serialize(
+                VoicePresets,
+                new JsonSerializerOptions
+                {
+                    WriteIndented = true
+                });
+
+        File.WriteAllText(
+            dialog.FileName,
+            json);
+
+        StatusMessage =
+            $"Exported {VoicePresets.Count} presets";
+    }
+
+    [RelayCommand]
+    private void ImportPresetPack()
+    {
+        var dialog =
+            new OpenFileDialog();
+
+        dialog.Filter =
+            "Preset Pack|*.json";
+
+        if (dialog.ShowDialog() != true)
+            return;
+
+        try
+        {
+            string json =
+                File.ReadAllText(
+                    dialog.FileName);
+
+            var presets =
+                JsonSerializer.Deserialize<
+                    List<VoicePreset>>(json);
+
+            if (presets == null)
+                return;
+
+            foreach (var preset in presets)
+            {
+                VoicePresets.Add(
+                    preset);
+            }
+
+            _presetService.SavePresets(
+                VoicePresets);
+
+            StatusMessage =
+                $"Imported {presets.Count} presets";
+        }
+        catch
+        {
+            StatusMessage =
+                "Invalid preset pack";
+        }
+    }
+
+
+
+    //NPC START HERE
+
     [ObservableProperty]
     private NpcProfile? selectedNpc;
 
@@ -1227,86 +1615,6 @@ AiModels
             ActiveNpc =
                 SelectedNpc;
         }
-    }
-
-    [ObservableProperty]
-    private string selectedSoundCategory = "All";
-
-    public ObservableCollection<string>
-    SoundCategories
-    { get; } = new()
-{
-    "All",
-    "Favorites",
-    "Combat",
-    "Ambience",
-    "Magic",
-    "Music",
-    "Tavern",
-    "NPC"
-}; private void RefreshSoundboardFilter()
-    {
-        FilteredSoundboardItems.Clear();
-
-        IEnumerable<SoundboardItem> items =
-            SoundboardItems;
-
-        if (!string.IsNullOrWhiteSpace(
-            SoundSearch))
-        {
-            items =
-                items.Where(x =>
-                    x.Name.Contains(
-                        SoundSearch,
-                        StringComparison
-                            .OrdinalIgnoreCase));
-        }
-
-        switch (SelectedSoundCategory)
-        {
-            case "Favorites":
-
-                items =
-                    items.Where(
-                        x => x.IsFavorite);
-
-                break;
-
-            case "All":
-
-                break;
-
-            default:
-
-                items =
-                    items.Where(
-                        x => x.Category ==
-                             SelectedSoundCategory);
-
-                break;
-        }
-
-        foreach (var item in items)
-        {
-            FilteredSoundboardItems.Add(
-                item);
-        }
-    }
-
-    partial void OnSelectedSoundCategoryChanged(
-    string value)
-    {
-        RefreshSoundboardFilter();
-    }
-    [RelayCommand]
-    private void ToggleFavorite(
-     SoundboardItem item)
-    {
-        _soundboardService
-            .SaveMetadata(
-                SoundboardItems);
-
-        RefreshSoundboardFilter();
     }
 
 }

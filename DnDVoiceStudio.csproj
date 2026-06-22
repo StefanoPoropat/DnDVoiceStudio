@@ -10,9 +10,13 @@
 
   <ItemGroup>
     <Compile Remove="Assets\Sounds\**" />
+    <Compile Remove="NewFolder\**" />
     <EmbeddedResource Remove="Assets\Sounds\**" />
+    <EmbeddedResource Remove="NewFolder\**" />
     <None Remove="Assets\Sounds\**" />
+    <None Remove="NewFolder\**" />
     <Page Remove="Assets\Sounds\**" />
+    <Page Remove="NewFolder\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -41,7 +45,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="NewFolder\" />
     <Folder Include="Sounds\Ambience\" />
     <Folder Include="Sounds\Combat\" />
     <Folder Include="Sounds\Magic\" />
