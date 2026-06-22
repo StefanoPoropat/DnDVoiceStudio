@@ -20,14 +20,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="Assets\NPCPortraits\default.png" />
+    <None Remove="NPCPortraits\default.png" />
     <None Remove="Assets\PreviewVoices\voice-message.wav" />
     <None Remove="Config\presets.json" />
     <None Remove="Sounds\Music\Final-Nice to meet you.wav" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Assets\NPCPortraits\default.png">
+    <Content Include="NPCPortraits\default.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Config\_deleted\presets.json">

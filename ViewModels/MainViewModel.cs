@@ -1269,17 +1269,20 @@ AiModels
 
         foreach (var npc in _npcService.LoadNpcs())
         {
-            Npcs.Add(npc);
-        }
-        foreach (var npc in _npcService.LoadNpcs())
-        {
-            if (string.IsNullOrWhiteSpace(
-                npc.PortraitPath))
+            if (string.IsNullOrWhiteSpace(npc.PortraitPath))
+            {
+                npc.PortraitPath = "default.png";
+            }
+            else
             {
                 npc.PortraitPath =
-                    @"Assets\NPCPortraits\default.png";
+                    Path.GetFileName(
+                        npc.PortraitPath);
             }
+
+            Npcs.Add(npc);
         }
+
 
         SelectedNpc =
             Npcs.FirstOrDefault();
@@ -1296,7 +1299,7 @@ AiModels
         var npc = new NpcProfile
         {
             Name = "New NPC",
-            PortraitPath = @"Assets\NPCPortraits\default.png",
+            PortraitPath = "default.png",
             Campaign = SelectedCampaign?.Name ?? "All Campaigns",
             PresetName = "Narrator"
         };
@@ -1341,11 +1344,7 @@ AiModels
                 destination,
                 true);
 
-            SelectedNpc.PortraitPath =
-                Path.Combine(
-                    "Assets",
-                    "NPCPortraits",
-                    fileName);
+            SelectedNpc.PortraitPath = fileName;
 
             PendingPortraitPath = null;
         }
@@ -1422,9 +1421,14 @@ AiModels
                     "default.png");
             }
 
+            var portrait = ActiveNpc.PortraitPath;
+
+            System.Diagnostics.Debug.WriteLine(
+                $"PORTRAIT RAW = [{portrait}]");
+
             return Path.Combine(
-                DataPathHelper.ProjectRoot,
-                ActiveNpc.PortraitPath);
+                DataPathHelper.PortraitFolder,
+                portrait);
         }
     }
 
@@ -1496,7 +1500,7 @@ AiModels
             }
 
             return Path.Combine(
-                DataPathHelper.ProjectRoot,
+                DataPathHelper.PortraitFolder,
                 SelectedNpc.PortraitPath);
         }
     }

@@ -20,13 +20,16 @@ public static class DataPathHelper
     public static string PortraitFolder =>
         Path.Combine(
             ProjectRoot,
-            "Assets",
             "NPCPortraits");
 
     public static string SoundsFolder =>
         Path.Combine(
             ProjectRoot,
             "Sounds");
+    public static string VoiceModelsFolder =>
+    Path.Combine(
+        ProjectRoot,
+        "VoiceModels");
 
     static DataPathHelper()
     {
@@ -35,6 +38,9 @@ public static class DataPathHelper
 
         Directory.CreateDirectory(
             PortraitFolder);
+
+        Directory.CreateDirectory(
+            VoiceModelsFolder);
     }
 
     public static string GetDataFile(

@@ -45,4 +45,6 @@ public partial class VoicePreset : ObservableObject
 
     [ObservableProperty]
     private string hotkey = "";
+
+    //public string Id { get; set; } = Guid.NewGuid().ToString();
 }
