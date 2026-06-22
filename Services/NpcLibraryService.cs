@@ -7,15 +7,8 @@ namespace DnDVoiceStudio.Services;
 public class NpcLibraryService
 {
     private readonly string _filePath =
-    Path.Combine(
-        Directory.GetParent(
-            AppDomain.CurrentDomain.BaseDirectory)!
-        .Parent!
-        .Parent!
-        .Parent!
-        .FullName,
-        "Data",
-        "npcs.json");
+        DataPathHelper.GetDataFile(
+            "npcs.json");
 
     public List<NpcProfile> LoadNpcs()
     {

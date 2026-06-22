@@ -92,6 +92,11 @@ public partial class MainViewModel : ObservableObject
     FilteredNpcs
     { get; } = new();
 
+    public ObservableCollection<SoundboardItem>
+    FilteredSoundboardItems
+    { get; } = new();
+
+
     //------------------------------------------------------------------------
 
     private float _currentDemon;
@@ -277,6 +282,7 @@ public partial class MainViewModel : ObservableObject
             _soundboardService.LoadSounds();
 
         RefreshSoundList();
+        RefreshSoundboardFilter();
     }
 
     private void RefreshSoundList()
@@ -902,10 +908,14 @@ AiModels
         var npc = new NpcProfile
         {
             Name = "New NPC",
-            PortraitPath = @"Assets\NPCPortraits\default.png"
+            PortraitPath = @"Assets\NPCPortraits\default.png",
+            Campaign = SelectedCampaign?.Name ?? "All Campaigns",
+            PresetName = "Narrator"
         };
 
         Npcs.Add(npc);
+
+        RefreshNpcFilter();
 
         SelectedNpc = npc;
     }
@@ -913,15 +923,15 @@ AiModels
     [RelayCommand]
     private void SaveNpc()
     {
+        var currentNpc = SelectedNpc;
+
         if (SelectedNpc != null &&
             !string.IsNullOrWhiteSpace(
                 PendingPortraitPath))
         {
+            // portrait save code
             string portraitsFolder =
-                Path.Combine(
-                    AppDomain.CurrentDomain.BaseDirectory,
-                    "Assets",
-                    "NPCPortraits");
+                DataPathHelper.PortraitFolder;
 
             Directory.CreateDirectory(
                 portraitsFolder);
@@ -961,6 +971,8 @@ AiModels
             nameof(CurrentNpcPortrait));
 
         RefreshNpcFilter();
+
+        SelectedNpc = currentNpc;
     }
     [RelayCommand]
     private void DeleteNpc()
@@ -1010,14 +1022,20 @@ AiModels
             if (ActiveNpc == null)
             {
                 return Path.Combine(
-                    AppDomain.CurrentDomain.BaseDirectory,
-                    "Assets",
-                    "NPCPortraits",
+                    DataPathHelper.PortraitFolder,
+                    "default.png");
+            }
+
+            if (string.IsNullOrWhiteSpace(
+                ActiveNpc.PortraitPath))
+            {
+                return Path.Combine(
+                    DataPathHelper.PortraitFolder,
                     "default.png");
             }
 
             return Path.Combine(
-                AppDomain.CurrentDomain.BaseDirectory,
+                DataPathHelper.ProjectRoot,
                 ActiveNpc.PortraitPath);
         }
     }
@@ -1038,10 +1056,7 @@ AiModels
         {
 
             string portraitsFolder =
-    Path.Combine(
-        AppDomain.CurrentDomain.BaseDirectory,
-        "Assets",
-        "NPCPortraits");
+                DataPathHelper.PortraitFolder;
 
             Directory.CreateDirectory(
                 portraitsFolder);
@@ -1080,9 +1095,7 @@ AiModels
             if (SelectedNpc == null)
             {
                 return Path.Combine(
-                    AppDomain.CurrentDomain.BaseDirectory,
-                    "Assets",
-                    "NPCPortraits",
+                    DataPathHelper.PortraitFolder,
                     "default.png");
             }
 
@@ -1090,14 +1103,12 @@ AiModels
                 SelectedNpc.PortraitPath))
             {
                 return Path.Combine(
-                    AppDomain.CurrentDomain.BaseDirectory,
-                    "Assets",
-                    "NPCPortraits",
+                    DataPathHelper.PortraitFolder,
                     "default.png");
             }
 
             return Path.Combine(
-                AppDomain.CurrentDomain.BaseDirectory,
+                DataPathHelper.ProjectRoot,
                 SelectedNpc.PortraitPath);
         }
     }
@@ -1189,25 +1200,113 @@ AiModels
         FilteredNpcs.Clear();
 
         if (SelectedCampaign == null ||
-            SelectedCampaign.Name ==
-            "All Campaigns")
+            SelectedCampaign.Name == "All Campaigns")
         {
             foreach (var npc in Npcs)
             {
                 FilteredNpcs.Add(npc);
             }
-
-            return;
         }
-
-        foreach (var npc in Npcs)
+        else
         {
-            if (npc.Campaign ==
-                SelectedCampaign.Name)
+            foreach (var npc in Npcs)
             {
-                FilteredNpcs.Add(npc);
+                if (npc.Campaign ==
+                    SelectedCampaign.Name)
+                {
+                    FilteredNpcs.Add(npc);
+                }
             }
         }
+        if (SelectedNpc == null ||
+            !FilteredNpcs.Contains(SelectedNpc))
+        {
+            SelectedNpc =
+                FilteredNpcs.FirstOrDefault();
+
+            ActiveNpc =
+                SelectedNpc;
+        }
+    }
+
+    [ObservableProperty]
+    private string selectedSoundCategory = "All";
+
+    public ObservableCollection<string>
+    SoundCategories
+    { get; } = new()
+{
+    "All",
+    "Favorites",
+    "Combat",
+    "Ambience",
+    "Magic",
+    "Music",
+    "Tavern",
+    "NPC"
+}; private void RefreshSoundboardFilter()
+    {
+        FilteredSoundboardItems.Clear();
+
+        IEnumerable<SoundboardItem> items =
+            SoundboardItems;
+
+        if (!string.IsNullOrWhiteSpace(
+            SoundSearch))
+        {
+            items =
+                items.Where(x =>
+                    x.Name.Contains(
+                        SoundSearch,
+                        StringComparison
+                            .OrdinalIgnoreCase));
+        }
+
+        switch (SelectedSoundCategory)
+        {
+            case "Favorites":
+
+                items =
+                    items.Where(
+                        x => x.IsFavorite);
+
+                break;
+
+            case "All":
+
+                break;
+
+            default:
+
+                items =
+                    items.Where(
+                        x => x.Category ==
+                             SelectedSoundCategory);
+
+                break;
+        }
+
+        foreach (var item in items)
+        {
+            FilteredSoundboardItems.Add(
+                item);
+        }
+    }
+
+    partial void OnSelectedSoundCategoryChanged(
+    string value)
+    {
+        RefreshSoundboardFilter();
+    }
+    [RelayCommand]
+    private void ToggleFavorite(
+     SoundboardItem item)
+    {
+        _soundboardService
+            .SaveMetadata(
+                SoundboardItems);
+
+        RefreshSoundboardFilter();
     }
 
 }

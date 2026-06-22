@@ -7,9 +7,7 @@ namespace DnDVoiceStudio.Services;
 public class CampaignService
 {
     private readonly string _filePath =
-        Path.Combine(
-            AppDomain.CurrentDomain.BaseDirectory,
-            "Data",
+        DataPathHelper.GetDataFile(
             "campaigns.json");
 
     public List<Campaign> LoadCampaigns()

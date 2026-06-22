@@ -7,14 +7,7 @@ namespace DnDVoiceStudio.Services;
 public class PresetService
 {
     private readonly string _filePath =
-        Path.Combine(
-            Directory.GetParent(
-                AppDomain.CurrentDomain.BaseDirectory)!
-            .Parent!
-            .Parent!
-            .Parent!
-            .FullName,
-            "Data",
+        DataPathHelper.GetDataFile(
             "presets.json");
 
     public List<VoicePreset> LoadPresets()

@@ -492,6 +492,12 @@
                         Content="Stop All"
                         Command="{Binding StopAllSoundsCommand}" />
 
+                                <ComboBox
+    Width="150"
+    Margin="0,0,10,0"
+    ItemsSource="{Binding SoundCategories}"
+    SelectedItem="{Binding SelectedSoundCategory}" />
+
                                 <TextBox
                         Width="300"
                         Height="35"
@@ -502,8 +508,7 @@
                             </StackPanel>
 
                             <ListBox
-                    ItemsSource="{Binding SoundboardItems}">
-
+                        ItemsSource="{Binding FilteredSoundboardItems}">
                                 <ListBox.ItemTemplate>
 
                                     <DataTemplate>
@@ -533,6 +538,47 @@
                                             FontSize="11"
                                             Opacity="0.7"
                                             Text="{Binding Category}" />
+
+                                                    <ToggleButton
+    Width="40"
+    Height="35"
+    FontSize="18"
+    FontWeight="Bold"
+    IsChecked="{Binding IsFavorite}"
+    Command="{Binding DataContext.ToggleFavoriteCommand,
+              RelativeSource={RelativeSource AncestorType=Window}}"
+    CommandParameter="{Binding}">
+
+                                                        <ToggleButton.Style>
+
+                                                            <Style TargetType="ToggleButton">
+
+                                                                <Setter Property="Content"
+                    Value="☆"/>
+
+                                                                <Setter Property="Opacity"
+                    Value="0.5"/>
+
+                                                                <Style.Triggers>
+
+                                                                    <Trigger Property="IsChecked"
+                         Value="True">
+
+                                                                        <Setter Property="Content"
+                            Value="★"/>
+
+                                                                        <Setter Property="Opacity"
+                            Value="1"/>
+
+                                                                    </Trigger>
+
+                                                                </Style.Triggers>
+
+                                                            </Style>
+
+                                                        </ToggleButton.Style>
+
+                                                    </ToggleButton>
 
                                                 </StackPanel>
 
