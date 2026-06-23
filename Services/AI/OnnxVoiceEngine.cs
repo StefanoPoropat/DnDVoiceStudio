@@ -1,17 +1,30 @@
-﻿namespace DnDVoiceStudio.Services.Ai;
+﻿using System.IO;
+
+namespace DnDVoiceStudio.Services.Ai;
 
 public class OnnxVoiceEngine : IAiVoiceEngine
 {
+    private bool _loaded;
+
+    private string _name = "ONNX";
+
     public string Name =>
-        "ONNX";
+        _name;
 
     public bool IsLoaded =>
-        false;
+        _loaded;
 
     public bool LoadModel(
         string modelPath)
     {
-        return false;
+        _name =
+            Path.GetFileName(
+                Path.GetDirectoryName(
+                    modelPath)!);
+
+        _loaded = true;
+
+        return true;
     }
 
     public float[] Process(

@@ -836,10 +836,13 @@ AiModels
             return;
 
         if (_onnxEngine.LoadModel(
-                model.ModelPath))
+         model.ModelPath))
         {
             _audioEngine.SetAiEngine(
                 _onnxEngine);
+
+            LoadedAiModel =
+                model.Name;
 
             StatusMessage =
                 $"Loaded {model.Name}";
@@ -898,15 +901,10 @@ AiModels
             $"FFmpeg: {(ffmpeg ? "OK" : "Missing")}";
     }
 
-    private readonly VoiceModelService
-    _voiceModelService = new();
-    private readonly OnnxVoiceEngine
-    _onnxEngine = new();
+    private readonly VoiceModelService _voiceModelService = new();
+    private readonly OnnxVoiceEngine _onnxEngine = new();
 
-    public ObservableCollection<VoiceModel>
-    VoiceModels
-    { get; }
-        = new();
+    public ObservableCollection<VoiceModel> VoiceModels { get; } = new();
     private void LoadVoiceModels()
     {
         VoiceModels.Clear();
