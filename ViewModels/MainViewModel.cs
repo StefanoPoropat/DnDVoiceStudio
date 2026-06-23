@@ -1,15 +1,15 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using DnDVoiceStudio.Services.Ai;
 using DnDVoiceStudio.Services.Ai.Environment;
 using DnDVoiceStudio.Services.AI;
 using DnDVoiceStudio.Services.Audio;
-using System.Collections.ObjectModel;
 namespace DnDVoiceStudio.ViewModels;
 using DnDVoiceStudio.Models;
 using DnDVoiceStudio.Services;
+using DnDVoiceStudio.Services.Ai;
 using DnDVoiceStudio.Services.VoicePreview;
 using Microsoft.Win32;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Text.Json;
@@ -233,11 +233,11 @@ AvailableHotkeys
         LoadSounds();
         LoadSoundCategories();
 
-        RefreshAiModels();
-
         LoadNpcs();
 
         LoadCampaigns();
+
+        LoadVoiceModels();
 
         _audioEngine.LevelChanged += level =>
         {
@@ -807,6 +807,10 @@ AvailableHotkeys
             OnPropertyChanged();
         }
     }
+
+
+    //AI MODEL MANAGEMENT STARTS HERE
+
     public ObservableCollection<AiVoiceModel>
 AiModels
     { get; }
@@ -816,40 +820,34 @@ AiModels
     _aiModelService = new();
 
     [RelayCommand]
-    private void RefreshAiModels()
+    private void RefreshVoiceModels()
     {
-        AiModels.Clear();
+        LoadVoiceModels();
 
-        foreach (var model in
-                 _aiModelService.LoadModels())
-        {
-            AiModels.Add(model);
-        }
+        StatusMessage =
+            $"Found {VoiceModels.Count} voice models.";
     }
 
     [RelayCommand]
-    private void LoadAiModel(
-    AiVoiceModel model)
+    private void LoadVoiceModel(
+    VoiceModel model)
     {
         if (model == null)
             return;
 
-        bool loaded =
-            _audioEngine.LoadAiModel(
-                model.ModelPath);
-
-        if (loaded)
+        if (_onnxEngine.LoadModel(
+                model.ModelPath))
         {
-            LoadedAiModel =
-                model.Name;
+            _audioEngine.SetAiEngine(
+                _onnxEngine);
 
             StatusMessage =
-                $"Loaded AI model: {model.Name}";
+                $"Loaded {model.Name}";
         }
         else
         {
             StatusMessage =
-                $"Failed to load model";
+                $"Failed loading {model.Name}";
         }
     }
 
@@ -900,7 +898,29 @@ AiModels
             $"FFmpeg: {(ffmpeg ? "OK" : "Missing")}";
     }
 
+    private readonly VoiceModelService
+    _voiceModelService = new();
+    private readonly OnnxVoiceEngine
+    _onnxEngine = new();
 
+    public ObservableCollection<VoiceModel>
+    VoiceModels
+    { get; }
+        = new();
+    private void LoadVoiceModels()
+    {
+        VoiceModels.Clear();
+
+        foreach (var model in
+                 _voiceModelService.LoadModels())
+        {
+            VoiceModels.Add(model);
+        }
+    }
+
+
+
+    //VOICE PARAMS STARTS HERE
 
     private float _currentFormant;
     public float CurrentFormant

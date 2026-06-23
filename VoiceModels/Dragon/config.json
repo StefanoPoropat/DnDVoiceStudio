@@ -1,0 +1,8 @@
+﻿{
+  "Name": "Dragon",
+  "SampleRate": 16000,
+  "ChunkSize": 3200,
+  "InputName": "input",
+  "OutputName": "output",
+  "SpeakerId": 0
+}

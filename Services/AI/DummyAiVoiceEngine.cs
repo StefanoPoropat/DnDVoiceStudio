@@ -3,7 +3,7 @@
 public class DummyAiVoiceEngine : IAiVoiceEngine
 {
     public string Name =>
-        "Dummy AI";
+        "Dummy";
 
     public bool IsLoaded
     {
@@ -25,3 +25,39 @@ public class DummyAiVoiceEngine : IAiVoiceEngine
         return samples;
     }
 }
+/* FOR POSSIBLE FUTURE USE:
+ 
+namespace DnDVoiceStudio.Services.Ai;
+
+public class OnnxVoiceEngine : IAiVoiceEngine
+{
+    private string _name = "ONNX";
+
+    public string Name => _name;
+
+    public bool IsLoaded
+    {
+        get;
+        private set;
+    }
+
+    public bool LoadModel(
+        string modelPath)
+    {
+        _name =
+            Path.GetFileNameWithoutExtension(
+                modelPath);
+
+        IsLoaded = true;
+
+        return true;
+    }
+
+    public float[] Process(
+        float[] samples)
+    {
+        return samples;
+    }
+} 
+
+ */
