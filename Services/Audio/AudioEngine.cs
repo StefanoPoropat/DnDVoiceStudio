@@ -24,6 +24,10 @@ public class AudioEngine
     private readonly RadioEffect _radioEffect = new();
     private readonly TitanEffect _titanEffect = new();
 
+    private readonly DragonEffect _dragonEffect = new();
+
+    private float _duckMultiplier = 1f;
+
     private VoiceProfile _currentProfile = new();
 
     private bool _monitorEnabled = true;
@@ -183,6 +187,8 @@ public class AudioEngine
             _compressionEffect.Process(
                 processed);
 
+        processed = _distortionEffect.Process(processed);
+
         processed =
             _demonEffect.Process(
                 processed);
@@ -199,19 +205,32 @@ public class AudioEngine
             _titanEffect.Process(
                 processed);
 
+        processed =
+            _dragonEffect.Process(
+                processed);
+
         if (_aiEngine.IsLoaded)
         {
             processed =
                 _aiEngine.Process(
                     processed);
         }
-        processed =
-    _distortionEffect.Process(
-        processed);
 
         processed =
             _reverbEffect.Process(
                 processed);
+
+        for (int i = 0; i < processed.Length; i++)
+        {
+            processed[i] *=
+    (_outputVolume *
+     _duckMultiplier);
+
+            processed[i] = Math.Clamp(
+                processed[i],
+                -1f,
+                1f);
+        }
 
         return processed;
     }
@@ -253,6 +272,9 @@ public class AudioEngine
 
         _titanEffect.SetAmount(
             profile.Titan);
+
+        _dragonEffect.SetAmount(
+                profile.Dragon);
     }
 
     public VoiceProfile CurrentProfile =>
@@ -321,16 +343,16 @@ public class AudioEngine
                     processed);
 
             _previewBuffer =
-    new BufferedWaveProvider(
-        new WaveFormat(
-            44100,
-            1))
-    {
-        BufferDuration =
+                new BufferedWaveProvider(
+                    new WaveFormat(
+                        reader.WaveFormat.SampleRate,
+                        reader.WaveFormat.Channels))
+                {
+                    BufferDuration =
         TimeSpan.FromSeconds(30),
 
-        DiscardOnBufferOverflow = true
-    };
+                    DiscardOnBufferOverflow = true
+                };
 
             _previewBuffer.AddSamples(
                 outputBytes,
@@ -354,5 +376,15 @@ public class AudioEngine
 
         _previewOutput = null;
         _previewBuffer = null;
+    }
+
+    public void SetDuckMultiplier(
+    float value)
+    {
+        _duckMultiplier =
+            Math.Clamp(
+                value,
+                0f,
+                1f);
     }
 }

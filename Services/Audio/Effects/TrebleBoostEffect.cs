@@ -4,20 +4,20 @@ public class TrebleBoostEffect
 {
     private float _amount;
 
-    public void SetAmount(
-        float amount)
+    public void SetAmount(float amount)
     {
         _amount = amount;
     }
 
-    public float[] Process(
-        float[] samples)
+    public float[] Process(float[] samples)
     {
-        if (_amount == 0)
+        if (Math.Abs(_amount) < 0.01f)
             return samples;
 
         float gain =
-            _amount / 20f;
+            (float)Math.Pow(
+                10,
+                _amount / 40f);
 
         float[] output =
             new float[samples.Length];
@@ -31,10 +31,9 @@ public class TrebleBoostEffect
 
             output[i] =
                 samples[i] +
-                high * gain;
+                high * (gain - 1f);
 
-            previous =
-                samples[i];
+            previous = samples[i];
         }
 
         return output;

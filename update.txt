@@ -1,10 +1,10 @@
-﻿Stabile version: 1.7.14
+﻿Stabile version: 1.7.xy
 
-Stabile version 1.7.14 is now available! This update includes several bug fixes and performance improvements to enhance your experience. We recommend all users to update to this latest version to benefit from the new features and optimizations.
-To update to version 1.7.14, please follow these steps:
+Stabile version 1.7.xy is now available! This update includes several bug fixes and performance improvements to enhance your experience. We recommend all users to update to this latest version to benefit from the new features and optimizations.
+To update to version 1.7.xy, please follow these steps:
 1. Open your project in your development environment.
 2. Navigate to the package manager or update section.
-3. Search for the latest version of the package and select version 1.7.14.
+3. Search for the latest version of the package and select version 1.7.xy.
 4. Click on the update button to install the latest version.
 5. After the update is complete, rebuild your project to ensure all changes are applied correctly.
 

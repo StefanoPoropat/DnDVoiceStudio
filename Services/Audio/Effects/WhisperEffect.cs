@@ -10,6 +10,9 @@ public class WhisperEffect
         _amount = amount;
     }
 
+    private readonly Random _random =
+    new();
+
     public float[] Process(
     float[] samples)
     {
@@ -19,8 +22,7 @@ public class WhisperEffect
         float mix =
             _amount / 100f;
 
-        Random random =
-            new Random(42);
+
 
         float[] result =
             new float[samples.Length];
@@ -33,7 +35,7 @@ public class WhisperEffect
                 samples[i];
 
             float noise =
-                ((float)random.NextDouble()
+                ((float)_random.NextDouble()
                 - 0.5f)
                 * 0.05f
                 * mix;

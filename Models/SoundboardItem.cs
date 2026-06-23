@@ -1,14 +1,27 @@
-﻿namespace DnDVoiceStudio.Models;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 
-public class SoundboardItem
+namespace DnDVoiceStudio.Models;
+
+public partial class SoundboardItem : ObservableObject
 {
-    public string Name { get; set; } = "";
+    [ObservableProperty]
+    private string name = "";
 
-    public string FilePath { get; set; } = "";
+    [ObservableProperty]
+    private string filePath = "";
 
-    public string Category { get; set; } = "General";
-    public bool IsFavorite { get; set; }
+    [ObservableProperty]
+    private string category = "General";
 
-    public string Hotkey { get; set; } = "";
-    public bool Loop { get; set; }
+    [ObservableProperty]
+    private bool isFavorite;
+
+    [ObservableProperty]
+    private string hotkey = "";
+
+    [ObservableProperty]
+    private bool loop;
+
+    [ObservableProperty]
+    private float volume = 1.0f;
 }

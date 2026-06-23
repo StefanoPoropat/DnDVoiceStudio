@@ -59,4 +59,5 @@ public class VoiceProfile
         get;
         set;
     }
+    public float Dragon { get; set; }
 }

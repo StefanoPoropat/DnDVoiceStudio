@@ -60,7 +60,9 @@ public class SoundboardService
                         meta?.IsFavorite ?? false,
 
                     Hotkey =
-                        meta?.Hotkey ?? ""
+                        meta?.Hotkey ?? "",
+
+                    Volume = meta?.Volume ?? 0.5f,
                 });
 
         }
@@ -114,7 +116,8 @@ public class SoundboardService
                     IsFavorite =
                         x.IsFavorite,
                     Hotkey =
-                        x.Hotkey
+                        x.Hotkey,
+                    Volume = x.Volume
                 });
 
         string json =

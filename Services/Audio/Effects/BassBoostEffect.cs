@@ -4,20 +4,20 @@ public class BassBoostEffect
 {
     private float _amount;
 
-    public void SetAmount(
-        float amount)
+    public void SetAmount(float amount)
     {
         _amount = amount;
     }
 
-    public float[] Process(
-        float[] samples)
+    public float[] Process(float[] samples)
     {
-        if (_amount == 0)
+        if (Math.Abs(_amount) < 0.01f)
             return samples;
 
         float gain =
-            1f + (_amount / 20f);
+            (float)Math.Pow(
+                10,
+                _amount / 40f);
 
         float[] output =
             new float[samples.Length];
@@ -27,12 +27,12 @@ public class BassBoostEffect
         for (int i = 0; i < samples.Length; i++)
         {
             previous =
-                (previous * 0.95f) +
-                (samples[i] * 0.05f);
+                previous * 0.98f +
+                samples[i] * 0.02f;
 
             output[i] =
                 samples[i] +
-                previous * gain;
+                previous * (gain - 1f);
         }
 
         return output;

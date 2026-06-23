@@ -10,6 +10,7 @@ using DnDVoiceStudio.Models;
 using DnDVoiceStudio.Services;
 using DnDVoiceStudio.Services.VoicePreview;
 using Microsoft.Win32;
+using System.ComponentModel;
 using System.IO;
 using System.Text.Json;
 
@@ -115,7 +116,8 @@ AvailableHotkeys
     "NumPad9",
     "NumPad0"
 };
-
+    [ObservableProperty]
+    private double duckAmount = 0.5;
 
     //------------------------------------------------------------------------
 
@@ -177,6 +179,21 @@ AvailableHotkeys
                 return;
 
             _currentTitan = value;
+            OnPropertyChanged();
+
+            UpdateCurrentVoice();
+        }
+    }
+    private float _currentDragon;
+    public float CurrentDragon
+    {
+        get => _currentDragon;
+        set
+        {
+            if (_currentDragon == value)
+                return;
+
+            _currentDragon = value;
             OnPropertyChanged();
 
             UpdateCurrentVoice();
@@ -299,11 +316,27 @@ AvailableHotkeys
 
     private void LoadSounds()
     {
-        _allSounds =
-            _soundboardService.LoadSounds();
+        _allSounds = _soundboardService.LoadSounds();
+
+        foreach (var sound in _allSounds)
+        {
+            sound.PropertyChanged += Sound_PropertyChanged;
+        }
 
         RefreshSoundList();
         RefreshSoundboardFilter();
+    }
+
+    private void Sound_PropertyChanged(
+    object? sender,
+    PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(SoundboardItem.Volume) ||
+            e.PropertyName == nameof(SoundboardItem.IsFavorite) ||
+            e.PropertyName == nameof(SoundboardItem.Hotkey))
+        {
+            _soundboardService.SaveMetadata(_allSounds);
+        }
     }
 
     private void RefreshSoundList()
@@ -439,10 +472,10 @@ AvailableHotkeys
     {
         if (item == null)
             return;
-
+        _audioEngine.SetDuckMultiplier(0.5f);
         _soundPlayer.Play(
             item.FilePath,
-            SoundboardVolume,
+            item.Volume * SoundboardVolume,
             item.Loop);
         System.Diagnostics.Debug.WriteLine(
     $"PLAY: {item.Name}");
@@ -454,8 +487,9 @@ AvailableHotkeys
     {
         if (item == null)
             return;
-
         _soundPlayer.Stop(item.FilePath);
+        _audioEngine.SetDuckMultiplier(
+    1f);
     }
 
     [RelayCommand]
@@ -650,6 +684,7 @@ AvailableHotkeys
         Whisper = CurrentWhisper,
         Radio = CurrentRadio,
         Titan = CurrentTitan,
+        Dragon = CurrentDragon,
     });
     }
 

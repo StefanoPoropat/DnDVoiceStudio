@@ -7,4 +7,5 @@ public class SoundMetadata
     public bool IsFavorite { get; set; }
 
     public string Hotkey { get; set; } = "";
+    public float Volume { get; set; }
 }
