@@ -205,6 +205,9 @@ public class AudioEngine
                 _aiEngine.Process(
                     processed);
         }
+        processed =
+    _distortionEffect.Process(
+        processed);
 
         processed =
             _reverbEffect.Process(
