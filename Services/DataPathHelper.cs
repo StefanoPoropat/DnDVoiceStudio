@@ -26,21 +26,20 @@ public static class DataPathHelper
         Path.Combine(
             ProjectRoot,
             "Sounds");
-    public static string VoiceModelsFolder =>
-    Path.Combine(
-        ProjectRoot,
-        "VoiceModels");
+    public static string VoiceModels =>
+        Path.Combine(ProjectRoot, "VoiceModels");
 
     static DataPathHelper()
     {
-        Directory.CreateDirectory(
-            DataFolder);
+        //Directory.CreateDirectory(AppRoot);
+        Directory.CreateDirectory(DataFolder);
+        Directory.CreateDirectory(PortraitFolder);
+        Directory.CreateDirectory(SoundsFolder);
+        Directory.CreateDirectory(VoiceModels);
+        //Directory.CreateDirectory(VoiceModelsFolder);
 
-        Directory.CreateDirectory(
-            PortraitFolder);
+        //string folder = DataPathHelper.VoiceModelsFolder;
 
-        Directory.CreateDirectory(
-            VoiceModelsFolder);
     }
 
     public static string GetDataFile(

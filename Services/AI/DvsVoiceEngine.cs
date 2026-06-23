@@ -1,10 +1,10 @@
 ﻿namespace DnDVoiceStudio.Services.Ai;
 
-public class RvcVoiceEngine
+public class DvsVoiceEngine
     : IAiVoiceEngine
 {
     public string Name =>
-        "RVC";
+        "DVS";
 
     public bool IsLoaded =>
         false;

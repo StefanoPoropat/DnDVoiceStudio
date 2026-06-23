@@ -2,19 +2,13 @@
 
 public interface IAiVoiceEngine
 {
-    string Name
-    {
-        get;
-    }
+    string Name { get; }
 
-    bool IsLoaded
-    {
-        get;
-    }
+    bool IsLoaded { get; }
 
-    bool LoadModel(
-        string modelPath);
+    bool LoadModel(string modelFolder);
 
-    float[] Process(
-        float[] samples);
+    float[] Process(float[] samples);
+
+    void Unload();
 }

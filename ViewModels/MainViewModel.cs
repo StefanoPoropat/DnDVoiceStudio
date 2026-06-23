@@ -811,8 +811,8 @@ AvailableHotkeys
 
     //AI MODEL MANAGEMENT STARTS HERE
 
-    public ObservableCollection<AiVoiceModel>
-AiModels
+    public ObservableCollection<AiModelInfo>
+    AiModels
     { get; }
     = new();
 
@@ -825,12 +825,12 @@ AiModels
         LoadVoiceModels();
 
         StatusMessage =
-            $"Found {VoiceModels.Count} voice models.";
+            $"Found {AiModels.Count} voice models.";
     }
 
     [RelayCommand]
     private void LoadVoiceModel(
-    VoiceModel model)
+    AiModelInfo model)
     {
         if (model == null)
             return;
@@ -846,6 +846,7 @@ AiModels
 
             StatusMessage =
                 $"Loaded {model.Name}";
+
         }
         else
         {
@@ -901,20 +902,48 @@ AiModels
             $"FFmpeg: {(ffmpeg ? "OK" : "Missing")}";
     }
 
-    private readonly VoiceModelService _voiceModelService = new();
+    //private readonly VoiceModelService _voiceModelService = new();
     private readonly OnnxVoiceEngine _onnxEngine = new();
 
-    public ObservableCollection<VoiceModel> VoiceModels { get; } = new();
+    //public ObservableCollection<VoiceModel> VoiceModels { get; } = new();
     private void LoadVoiceModels()
     {
-        VoiceModels.Clear();
+        string fullPath = DataPathHelper.VoiceModels;
 
-        foreach (var model in
-                 _voiceModelService.LoadModels())
+        System.Diagnostics.Debug.WriteLine(
+            $"VOICE MODELS PATH = {fullPath}");
+
+        System.Diagnostics.Debug.WriteLine(
+            $"EXISTS = {Directory.Exists(fullPath)}");
+
+        AiModels.Clear();
+
+        var loader = new VoiceModelLoader();
+
+        var models = loader.LoadModels(fullPath);
+
+        if (models == null)
+            return;
+
+        foreach (var model in models)
         {
-            VoiceModels.Add(model);
+            System.Diagnostics.Debug.WriteLine(
+                $"FOUND MODEL = {model.Name}");
+
+            AiModels.Add(new AiModelInfo
+            {
+                Name = model.Name,
+                ModelPath = model.FolderPath,
+                ModelType = model.ModelType
+            });
         }
     }
+
+    private readonly ModelDiscoveryService
+    _modelDiscovery =
+        new();
+
+
 
 
 
