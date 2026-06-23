@@ -2,15 +2,15 @@
 
 public class VoiceModelConfig
 {
-    public string Name { get; set; } = "";
+    public string DisplayName { get; set; } = "";
+    public string Author { get; set; } = "";
+    public string Description { get; set; } = "";
+    public string Version { get; set; } = "1.0";
 
-    public int SampleRate { get; set; } = 16000;
+    public string ModelType { get; set; } = "EMPTY";
 
-    public int ChunkSize { get; set; } = 3200;
-
-    public string InputName { get; set; } = "input";
-
-    public string OutputName { get; set; } = "output";
-
-    public int SpeakerId { get; set; }
+    public string Race { get; set; } = "";
+    public string Gender { get; set; } = "";
+    public string Language { get; set; } = "";
+    public string Tags { get; set; } = "";
 }

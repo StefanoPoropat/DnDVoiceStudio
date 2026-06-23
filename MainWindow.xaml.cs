@@ -1,5 +1,6 @@
 ﻿using DnDVoiceStudio.Services;
 using DnDVoiceStudio.ViewModels;
+using System.IO;
 using System.Windows;
 using System.Windows.Input;
 
@@ -90,6 +91,31 @@ public partial class MainWindow : Window
 
         vm.HandleSoundHotkey(
             e.Key.ToString());
+    }
+
+    private void Window_Drop(
+    object sender,
+    DragEventArgs e)
+    {
+        if (!e.Data.GetDataPresent(
+            DataFormats.FileDrop))
+            return;
+
+        var files =
+            (string[])e.Data.GetData(
+                DataFormats.FileDrop);
+
+        foreach (var file in files)
+        {
+            if (Directory.Exists(file))
+            {
+                var vm =
+                    DataContext as MainViewModel;
+
+                vm?.ImportModelFolderCommand
+                    .Execute(file);
+            }
+        }
     }
 
 }

@@ -1,27 +1,39 @@
-﻿namespace DnDVoiceStudio.Services.Ai;
+﻿using System.IO;
+
+namespace DnDVoiceStudio.Services.Ai;
 
 public class DvsVoiceEngine
-    : IAiVoiceEngine
+    : AiVoiceEngineBase
 {
-    public string Name =>
+    public override string Name =>
         "DVS";
 
-    public bool IsLoaded =>
-        false;
-
-    public bool LoadModel(
+    public override bool LoadModel(
         string modelFolder)
     {
-        throw new NotImplementedException();
-    }
+        string dvs =
+            Directory.GetFiles(
+                modelFolder,
+                "*.dvsmodel")
+            .FirstOrDefault()
+            ?? string.Empty;
 
-    public float[] Process(
-        float[] samples)
-    {
-        return samples;
-    }
+        if (!File.Exists(dvs))
+            return false;
 
-    public void Unload()
-    {
+        LoadedModel =
+            new DvsModel
+            {
+                Name =
+                    Path.GetFileName(
+                        modelFolder),
+
+                FolderPath =
+                    modelFolder,
+
+                DvsPath = dvs
+            };
+
+        return true;
     }
 }

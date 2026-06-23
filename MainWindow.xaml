@@ -9,7 +9,10 @@
     KeyDown="Window_KeyDown"
     Title="DnD Voice Studio"
     Height="850"
-    Width="1500">
+    Width="1500"
+    AllowDrop="True"
+    Drop="Window_Drop"
+    >
 
     <Grid Margin="15">
 
@@ -744,17 +747,44 @@
 
                     <GroupBox Header="Voice Models">
 
-                        <DockPanel>
+                        <DockPanel Margin="10">
 
-                            <Button
-            DockPanel.Dock="Top"
-            Margin="5"
-            Content="Refresh Models"
-            Command="{Binding RefreshVoiceModelsCommand}" />
+                            <!-- TOP CONTROLS (STEP 7 FIX) -->
+                            <StackPanel
+                DockPanel.Dock="Top"
+                Orientation="Horizontal"
+                Margin="0,0,0,10">
 
+                                <Button
+                    Width="120"
+                    Margin="0,0,10,0"
+                    Content="New Model"
+                    Command="{Binding NewModelCommand}" />
+
+                                <Button
+                    Width="120"
+                    Margin="0,0,10,0"
+                    Content="Duplicate"
+                    Command="{Binding DuplicateModelCommand}" />
+
+                                <Button
+                    Width="120"
+                    Margin="0,0,10,0"
+                    Content="Delete"
+                    Command="{Binding DeleteModelCommand}" />
+
+                                <Button
+                    Width="120"
+                    Content="Refresh"
+                    Command="{Binding RefreshVoiceModelsCommand}" />
+
+                            </StackPanel>
+
+                            <!-- LIST -->
                             <ListBox
-            ItemsSource="{Binding AiModels}"
-            Margin="5">
+                ItemsSource="{Binding AiModels}"
+                SelectedItem="{Binding SelectedAiModel}"
+                Margin="5">
 
                                 <ListBox.ItemTemplate>
 
@@ -767,24 +797,38 @@
                                                 <ColumnDefinition Width="Auto" />
                                             </Grid.ColumnDefinitions>
 
+                                            <!-- MODEL INFO -->
                                             <StackPanel>
 
                                                 <TextBlock
-        FontWeight="Bold"
-        Text="{Binding Name}" />
+                                    FontWeight="Bold"
+                                    FontSize="16"
+                                    Text="{Binding Config.DisplayName}" />
 
                                                 <TextBlock
-        Text="{Binding ModelType}" />
+                                    Opacity="0.7"
+                                    Text="{Binding ModelType}" />
+
+                                                <TextBlock
+                                    Opacity="0.8"
+                                    Text="{Binding Config.Author}" />
+
+                                                <TextBlock
+                                    Text="{Binding Config.Description}"
+                                    TextWrapping="Wrap"
+                                    Opacity="0.9"/>
 
                                             </StackPanel>
 
+                                            <!-- LOAD BUTTON -->
                                             <Button
-                            Grid.Column="1"
-                            Margin="10,0,0,0"
-                            Content="Load"
-                            Command="{Binding DataContext.LoadVoiceModelCommand,
-                                              RelativeSource={RelativeSource AncestorType=Window}}"
-                            CommandParameter="{Binding}" />
+                                Grid.Column="1"
+                                Margin="10,0,0,0"
+                                VerticalAlignment="Center"
+                                Content="Load"
+                                Command="{Binding DataContext.LoadVoiceModelCommand,
+                                                  RelativeSource={RelativeSource AncestorType=Window}}"
+                                CommandParameter="{Binding}" />
 
                                         </Grid>
 
@@ -799,7 +843,6 @@
                     </GroupBox>
 
                 </TabItem>
-
                 <!-- NPC LIBRARY -->
 
                 <TabItem Header="NPC Library">

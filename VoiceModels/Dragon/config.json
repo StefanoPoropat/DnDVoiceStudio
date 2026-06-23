@@ -1,4 +1,10 @@
 ﻿{
-  "Name": "Dragon",
-  "Engine": "RVC"
+  "DisplayName": "Ancient Red Dragon",
+  "Author": "Studly",
+  "Description": "Deep ancient dragon voice",
+  "Version": "1.0",
+  "Race": "Dragon",
+  "Gender": "Male",
+  "Language": "English",
+  "Tags": "dragon,boss,monster"
 }

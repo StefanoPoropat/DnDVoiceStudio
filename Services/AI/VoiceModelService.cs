@@ -47,8 +47,8 @@ public class VoiceModelService
             models.Add(
                 new AiModelInfo
                 {
-                    Name = config.Name,
-                    Folder = folder,
+                    Name = config.DisplayName,
+                    FolderPath = folder,
                     ModelPath = modelPath,
                     PortraitPath =
                         Path.Combine(

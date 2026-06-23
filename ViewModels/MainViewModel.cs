@@ -927,12 +927,19 @@ AvailableHotkeys
             System.Diagnostics.Debug.WriteLine(
                 $"FOUND MODEL = {model.Name}");
 
-            AiModels.Add(new AiModelInfo
-            {
-                Name = model.Name,
-                ModelPath = model.FolderPath,
-                ModelType = model.ModelType
-            });
+            var config =
+                VoiceModelConfigLoader
+                    .Load(
+                        model.FolderPath);
+
+            AiModels.Add(
+                new AiModelInfo
+                {
+                    Name = model.Name,
+                    ModelPath = model.FolderPath,
+                    ModelType = model.ModelType,
+                    Config = config
+                });
         }
     }
 
@@ -940,8 +947,92 @@ AvailableHotkeys
     _modelDiscovery =
         new();
 
+    //AI MODEL MANAGEMENT ENDS HERE
+    //AI MODEL MANIPULATION STARTS HERE
 
+    private readonly VoiceModelManager _modelManager = new();
 
+    [ObservableProperty]
+    private AiModelInfo? selectedAiModel;
+
+    [RelayCommand]
+    private void NewModel(string? type)
+    {
+        string name =
+            $"Model_{DateTime.Now:HHmmss}";
+
+        string modelType =
+            type ?? "EMPTY";
+
+        _modelManager.CreateModel(name, modelType);
+
+        LoadVoiceModels();
+
+        StatusMessage =
+            $"Created {name} ({modelType})";
+    }
+
+    [RelayCommand]
+    private void DeleteModel()
+    {
+        if (SelectedAiModel == null)
+            return;
+
+        _modelManager.DeleteModel(
+            SelectedAiModel.ModelPath);
+
+        LoadVoiceModels();
+
+        StatusMessage =
+            "Model deleted";
+    }
+
+    [RelayCommand]
+    private void DuplicateModel()
+    {
+        if (SelectedAiModel == null)
+            return;
+
+        string newName =
+            SelectedAiModel.Name
+            + "_Copy";
+
+        _modelManager.DuplicateModel(
+            SelectedAiModel.ModelPath,
+            newName);
+
+        LoadVoiceModels();
+
+        StatusMessage =
+            $"Created {newName}";
+    }
+    private readonly ModelImportService _modelImport = new();
+    [RelayCommand]
+    private void ImportModelFolder(string folderPath)
+    {
+        var model =
+            _modelImport.ImportFolder(folderPath);
+
+        if (model == null)
+        {
+            StatusMessage =
+                "Import failed.";
+            return;
+        }
+
+        AiModels.Add(
+            new AiModelInfo
+            {
+                Name = model.Name,
+                FolderPath = model.FolderPath,
+                ModelType = model.ModelType,
+                Config = VoiceModelConfigLoader.Load(model.FolderPath)
+            });
+
+        StatusMessage =
+            $"Imported {model.Name}";
+        LoadVoiceModels();
+    }
 
 
     //VOICE PARAMS STARTS HERE

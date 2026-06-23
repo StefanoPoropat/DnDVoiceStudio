@@ -2,27 +2,34 @@
 
 namespace DnDVoiceStudio.Services.Ai;
 
-public class OnnxVoiceEngine
+public class RvcVoiceEngine
     : AiVoiceEngineBase
 {
     public override string Name =>
-        "ONNX";
+        "RVC";
 
     public override bool LoadModel(
         string modelFolder)
     {
-        string onnx =
+        string pth =
             Directory.GetFiles(
                 modelFolder,
-                "*.onnx")
+                "*.pth")
             .FirstOrDefault()
             ?? string.Empty;
 
-        if (!File.Exists(onnx))
+        if (!File.Exists(pth))
             return false;
 
+        string index =
+            Directory.GetFiles(
+                modelFolder,
+                "*.index")
+            .FirstOrDefault()
+            ?? string.Empty;
+
         LoadedModel =
-            new OnnxModel
+            new RvcModel
             {
                 Name =
                     Path.GetFileName(
@@ -31,7 +38,9 @@ public class OnnxVoiceEngine
                 FolderPath =
                     modelFolder,
 
-                OnnxPath = onnx
+                PthPath = pth,
+
+                IndexPath = index
             };
 
         return true;
