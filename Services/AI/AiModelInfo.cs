@@ -1,4 +1,6 @@
-﻿namespace DnDVoiceStudio.Services.Ai;
+﻿using DnDVoiceStudio.Models;
+
+namespace DnDVoiceStudio.Services.Ai;
 
 public class AiModelInfo
 {
@@ -7,4 +9,14 @@ public class AiModelInfo
     public string ModelPath { get; set; } = "";
 
     public string ModelType { get; set; } = "";
+
+    public string Folder { get; set; } = "";
+
+    public VoiceModelConfig? Config { get; set; }
+
+    public string? PortraitPath { get; set; }
+
+    public string? IndexPath { get; set; }
+
+    public string? OnnxPath { get; set; }
 }

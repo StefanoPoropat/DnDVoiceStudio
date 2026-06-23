@@ -1,4 +1,4 @@
-﻿namespace DnDVoiceStudio.Models;
+﻿/*namespace DnDVoiceStudio.Models;
 
 public class VoiceModel
 {
@@ -11,4 +11,4 @@ public class VoiceModel
     public string PortraitPath { get; set; } = "";
 
     public VoiceModelConfig Config { get; set; } = new();
-}
+}*/

@@ -835,23 +835,20 @@ AvailableHotkeys
         if (model == null)
             return;
 
-        if (_onnxEngine.LoadModel(
-         model.ModelPath))
+        LoadedAiModel =
+            model.Name;
+
+        StatusMessage =
+            $"Loaded {model.Name}";
+
+        if (!string.IsNullOrWhiteSpace(
+            model.OnnxPath))
         {
+            _onnxEngine.LoadModel(
+                model.OnnxPath);
+
             _audioEngine.SetAiEngine(
                 _onnxEngine);
-
-            LoadedAiModel =
-                model.Name;
-
-            StatusMessage =
-                $"Loaded {model.Name}";
-
-        }
-        else
-        {
-            StatusMessage =
-                $"Failed loading {model.Name}";
         }
     }
 

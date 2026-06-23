@@ -6,9 +6,9 @@ namespace DnDVoiceStudio.Services.Ai;
 
 public class VoiceModelService
 {
-    public List<VoiceModel> LoadModels()
+    public List<AiModelInfo> LoadModels()
     {
-        List<VoiceModel> models =
+        List<AiModelInfo> models =
             new();
 
         string root =
@@ -45,7 +45,7 @@ public class VoiceModelService
             }
 
             models.Add(
-                new VoiceModel
+                new AiModelInfo
                 {
                     Name = config.Name,
                     Folder = folder,
