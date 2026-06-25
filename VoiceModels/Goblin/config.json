@@ -1,8 +1,9 @@
-﻿{
+{
   "DisplayName": "Goblin",
   "Author": "",
   "Description": "",
   "Version": "1.0",
+  "ModelType": "ONNX",
   "Race": "",
   "Gender": "",
   "Language": "",

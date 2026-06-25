@@ -6,6 +6,8 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:Controls="clr-namespace:DnDVoiceStudio.Controls"
     mc:Ignorable="d"
+    
+    xmlns:sys="clr-namespace:System;assembly=System.Runtime"
     KeyDown="Window_KeyDown"
     Title="DnD Voice Studio"
     Height="850"
@@ -745,102 +747,184 @@
 
                 <TabItem Header="AI Models">
 
-                    <GroupBox Header="Voice Models">
+                    <Grid Margin="8">
 
-                        <DockPanel Margin="10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="300"/>
+                            <ColumnDefinition Width="12"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
 
-                            <!-- TOP CONTROLS (STEP 7 FIX) -->
-                            <StackPanel
-                DockPanel.Dock="Top"
-                Orientation="Horizontal"
-                Margin="0,0,0,10">
+                        <!-- LEFT PANEL -->
+
+                        <Grid Grid.Column="0">
+
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <!-- Search -->
+                            <TextBox
+                Grid.Row="0"
+                Height="30"
+                Margin="0,0,0,8"
+                VerticalContentAlignment="Center"
+                Text="{Binding ModelSearch, UpdateSourceTrigger=PropertyChanged}" />
+
+                            <!-- Model List -->
+                            <ListView
+                Grid.Row="1"
+                Margin="0"
+                BorderThickness="1"
+                ItemsSource="{Binding FilteredAiModels}"
+                SelectedItem="{Binding SelectedAiModel}">
+
+                                <ListView.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border
+                            Margin="4"
+                            Padding="8"
+                            BorderBrush="#444"
+                            BorderThickness="1"
+                            CornerRadius="8">
+
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+
+                                                <StackPanel>
+                                                    <TextBlock
+                                        FontWeight="Bold"
+                                        FontSize="15"
+                                        Text="{Binding Name}" />
+
+                                                    <TextBlock
+                                        FontSize="12"
+                                        Foreground="Gray"
+                                        Text="{Binding Config.Author}" />
+                                                </StackPanel>
+
+                                                <Border
+                                    Grid.Column="1"
+                                    Padding="6,2"
+                                    CornerRadius="4"
+                                    Background="#2F3B52">
+
+                                                    <TextBlock
+                                        Foreground="White"
+                                        FontWeight="SemiBold"
+                                        Text="{Binding ModelType}" />
+                                                </Border>
+                                            </Grid>
+                                        </Border>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                            </ListView>
+
+                            <!-- Buttons -->
+                            <UniformGrid
+                Grid.Row="2"
+                Margin="0,8,0,0"
+                Columns="2">
 
                                 <Button
-                    Width="120"
-                    Margin="0,0,10,0"
-                    Content="New Model"
-                    Command="{Binding NewModelCommand}" />
-
-                                <Button
-                    Width="120"
-                    Margin="0,0,10,0"
-                    Content="Duplicate"
-                    Command="{Binding DuplicateModelCommand}" />
-
-                                <Button
-                    Width="120"
-                    Margin="0,0,10,0"
-                    Content="Delete"
-                    Command="{Binding DeleteModelCommand}" />
-
-                                <Button
-                    Width="120"
+                    Margin="2"
                     Content="Refresh"
                     Command="{Binding RefreshVoiceModelsCommand}" />
 
+                                <Button
+                    Margin="2"
+                    Content="Load"
+                    Command="{Binding LoadVoiceModelCommand}"
+                    CommandParameter="{Binding SelectedAiModel}" />
+
+                            </UniformGrid>
+
+                        </Grid>
+
+                        <!-- RIGHT PANEL -->
+
+                        <ScrollViewer Grid.Column="2"
+                      VerticalScrollBarVisibility="Auto">
+
+                            <StackPanel>
+
+                                <TextBlock
+                    FontSize="22"
+                    FontWeight="Bold"
+                    Margin="0,0,0,15"
+                    Text="{Binding SelectedAiModel.Config.DisplayName}" />
+
+                                <TextBlock
+                    FontWeight="SemiBold"
+                    Text="Author"/>
+
+                                <TextBox
+                    Margin="0,4,0,10"
+                    Text="{Binding ModelAuthor, UpdateSourceTrigger=PropertyChanged}" />
+
+                                <TextBlock
+                    FontWeight="SemiBold"
+                    Text="Description"/>
+
+                                <TextBox
+                    Margin="0,4,0,10"
+                    Height="110"
+                    AcceptsReturn="True"
+                    TextWrapping="Wrap"
+                    VerticalScrollBarVisibility="Auto"
+                    Text="{Binding ModelDescription, UpdateSourceTrigger=PropertyChanged}" />
+
+                                <TextBlock
+                    FontWeight="SemiBold"
+                    Text="Model Type"/>
+
+                                <ComboBox
+                    Margin="0,4,0,18"
+                    ItemsSource="{Binding ModelTypes}"
+                    SelectedItem="{Binding SelectedAiModel.Config.ModelType}" />
+
+                                <WrapPanel>
+                                    <Button
+                        Width="100"
+                        Margin="3"
+                        Content="New"
+                        Command="{Binding NewModelCommand}" />
+
+                                    <Button
+                        Width="100"
+                        Margin="3"
+                        Content="Save"
+                        Command="{Binding SaveModelMetadataCommand}" />
+
+                                    <Button
+                        Width="100"
+                        Margin="3"
+                        Content="Duplicate"
+                        Command="{Binding DuplicateModelCommand}" />
+
+                                    <Button
+                        Width="100"
+                        Margin="3"
+                        Content="Delete"
+                        Command="{Binding DeleteModelCommand}" />
+
+                                    <Button
+                        Width="100"
+                        Margin="3"
+                        Content="Import"
+                        Command="{Binding ImportModelFolderCommand}" />
+                                </WrapPanel>
+
                             </StackPanel>
 
-                            <!-- LIST -->
-                            <ListBox
-                ItemsSource="{Binding AiModels}"
-                SelectedItem="{Binding SelectedAiModel}"
-                Margin="5">
+                        </ScrollViewer>
 
-                                <ListBox.ItemTemplate>
-
-                                    <DataTemplate>
-
-                                        <Grid Margin="5">
-
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="*" />
-                                                <ColumnDefinition Width="Auto" />
-                                            </Grid.ColumnDefinitions>
-
-                                            <!-- MODEL INFO -->
-                                            <StackPanel>
-
-                                                <TextBlock
-                                    FontWeight="Bold"
-                                    FontSize="16"
-                                    Text="{Binding Config.DisplayName}" />
-
-                                                <TextBlock
-                                    Opacity="0.7"
-                                    Text="{Binding ModelType}" />
-
-                                                <TextBlock
-                                    Opacity="0.8"
-                                    Text="{Binding Config.Author}" />
-
-                                                <TextBlock
-                                    Text="{Binding Config.Description}"
-                                    TextWrapping="Wrap"
-                                    Opacity="0.9"/>
-
-                                            </StackPanel>
-
-                                            <!-- LOAD BUTTON -->
-                                            <Button
-                                Grid.Column="1"
-                                Margin="10,0,0,0"
-                                VerticalAlignment="Center"
-                                Content="Load"
-                                Command="{Binding DataContext.LoadVoiceModelCommand,
-                                                  RelativeSource={RelativeSource AncestorType=Window}}"
-                                CommandParameter="{Binding}" />
-
-                                        </Grid>
-
-                                    </DataTemplate>
-
-                                </ListBox.ItemTemplate>
-
-                            </ListBox>
-
-                        </DockPanel>
-
-                    </GroupBox>
+                    </Grid>
 
                 </TabItem>
                 <!-- NPC LIBRARY -->

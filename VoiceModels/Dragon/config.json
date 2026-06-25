@@ -1,8 +1,9 @@
-﻿{
+{
   "DisplayName": "Ancient Red Dragon",
   "Author": "Studly",
   "Description": "Deep ancient dragon voice",
   "Version": "1.0",
+  "ModelType": "RVC",
   "Race": "Dragon",
   "Gender": "Male",
   "Language": "English",

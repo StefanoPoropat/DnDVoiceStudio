@@ -941,11 +941,38 @@ AvailableHotkeys
                     Config = config
                 });
         }
+        ApplyModelFilter();
     }
 
     private readonly ModelDiscoveryService
     _modelDiscovery =
         new();
+    private void ApplyModelFilter()
+    {
+        FilteredAiModels.Clear();
+
+        IEnumerable<AiModelInfo> models = AiModels;
+
+        if (!string.IsNullOrWhiteSpace(ModelSearch))
+        {
+            string search = ModelSearch.Trim();
+
+            models = models.Where(m =>
+                m.Name.Contains(search, StringComparison.OrdinalIgnoreCase) ||
+                m.ModelType.Contains(search, StringComparison.OrdinalIgnoreCase) ||
+                (m.Config?.Author?.Contains(search, StringComparison.OrdinalIgnoreCase) ?? false) ||
+                (m.Config?.Description?.Contains(search, StringComparison.OrdinalIgnoreCase) ?? false) ||
+                (m.Config?.DisplayName?.Contains(search, StringComparison.OrdinalIgnoreCase) ?? false));
+        }
+
+        foreach (var model in models)
+            FilteredAiModels.Add(model);
+    }
+    partial void OnModelSearchChanged(string value)
+    {
+        ApplyModelFilter();
+    }
+
 
     //AI MODEL MANAGEMENT ENDS HERE
     //AI MODEL MANIPULATION STARTS HERE
@@ -1034,7 +1061,86 @@ AvailableHotkeys
         LoadVoiceModels();
     }
 
+    //AI MODEL MANIPULATION ENDS HERE
+    //AI MODEL MANAGEMENT STARTS HERE
 
+    [ObservableProperty]
+    private string modelDisplayName = "";
+
+    [ObservableProperty]
+    private string modelAuthor = "";
+
+    [ObservableProperty]
+    private string modelDescription = "";
+
+    [ObservableProperty]
+    private string modelVersion = "";
+
+    partial void OnSelectedAiModelChanged(
+    AiModelInfo? value)
+    {
+        if (value?.Config == null)
+            return;
+
+        ModelDisplayName =
+            value.Config.DisplayName;
+
+        ModelAuthor =
+            value.Config.Author;
+
+        ModelDescription =
+            value.Config.Description;
+
+        ModelVersion =
+            value.Config.Version;
+    }
+
+    [RelayCommand]
+    private void SaveModelMetadata()
+    {
+        if (SelectedAiModel == null)
+            return;
+
+        var config =
+            SelectedAiModel.Config
+            ?? new VoiceModelConfig();
+
+        config.DisplayName =
+            ModelDisplayName;
+
+        config.Author =
+            ModelAuthor;
+
+        config.Description =
+            ModelDescription;
+
+        config.Version =
+            ModelVersion;
+
+        VoiceModelConfigSaver.Save(
+            SelectedAiModel.ModelPath,
+            config);
+
+        StatusMessage =
+            "Metadata saved.";
+
+        //LoadVoiceModels();
+    }
+
+    [ObservableProperty]
+    private string modelSearch = "";
+
+    public IReadOnlyList<string> ModelTypes { get; } =
+    [
+        "EMPTY",
+    "RVC",
+    "ONNX",
+    "DVS"
+    ];
+
+    public ObservableCollection<AiModelInfo> FilteredAiModels { get; } = new();
+
+    //AI MODEL MANAGEMENT ENDS HERE
     //VOICE PARAMS STARTS HERE
 
     private float _currentFormant;
