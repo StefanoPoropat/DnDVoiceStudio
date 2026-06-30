@@ -1,0 +1,158 @@
+﻿##Current Roadmap Status
+
+#Phase 0 — Core Application
+
+Status: Complete
+
+Project architecture
+MVVM
+Audio engine
+Device selection
+Monitoring
+Preset loading/saving
+NPC system
+Campaign system
+Soundboard
+Voice preview
+Configuration storage
+
+#Phase 1 — Voice Effect Engine
+
+Status: ~95% Complete
+
+Implemented:
+
+Pitch shifting
+Reverb
+Distortion
+Formant shift
+Bass boost
+Treble boost
+Compression
+Whisper
+Demon
+Titan
+Dragon
+Output volume
+Live preview
+Effect presets
+
+Remaining polish:
+
+More fantasy effects later
+Better DSP quality
+Effect ordering optimization
+
+Nothing here blocks future development.
+
+#Phase 1.5 — AI Model Manager
+
+This phase grew much larger than originally planned.
+
+Completed:
+
+RVC support architecture
+ONNX support architecture
+DVS support architecture
+Unified IAiModel
+Unified IAiVoiceEngine
+Folder discovery
+Metadata (config.json)
+Model editor
+Import system
+Duplicate
+Delete
+Create
+Search
+Filtering
+Future-proof architecture
+Empty models
+Config saving
+
+This subsystem is essentially complete.
+
+#Phase 2 — Real AI Voice Inference
+
+This is the phase we've finally reached.
+
+Instead of fake engines returning:
+
+return samples;
+
+they will actually perform inference.
+
+This phase includes:
+
+Loading RVC models
+Loading ONNX models
+Loading DVS models
+Processing microphone audio
+Converting voices in real time
+Switching models while running
+Keeping latency under ~200 ms
+
+This is where DnDVoiceStudio becomes a genuine voice changer rather than a DSP effects application.
+
+#Phase 3 — Voice Training
+
+Still untouched.
+
+Future features include:
+
+Dataset creation
+Recording assistant
+Cleaning datasets
+Training pipeline
+Export to:
+RVC
+ONNX
+DVS
+
+#Phase 4 — NPC Studio
+
+Partially complete.
+
+Already have:
+
+NPC storage
+Campaign storage
+Portrait support
+
+Still planned:
+
+NPC voice assignment
+Dialogue generation
+Voice previews
+Campaign integration
+
+#Phase 5 — Soundboard Studio
+
+Mostly complete.
+
+Remaining work:
+
+Per-sound volume
+Categories
+Drag & drop
+Waveform thumbnails
+Better search
+
+#Phase 6 — Performance
+
+Future optimizations:
+
+SIMD DSP
+Buffer pooling
+Zero-copy audio pipeline
+Parallel processing
+GPU inference where appropriate
+
+#Phase 7 — Packaging
+
+Final release work:
+
+Installer
+Auto-updater
+Portable mode
+Plugin support
+Documentation

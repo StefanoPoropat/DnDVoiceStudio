@@ -81,6 +81,10 @@
 
                         <StackPanel Margin="10">
 
+                            <TextBlock Text="{Binding CurrentLatencyMs}" />
+                            <TextBlock Text="{Binding AverageLatencyMs}" />
+                            <TextBlock Text="{Binding EstimatedFps}" />
+
                             <Button
                                 Height="40"
                                 Content="Start Mic"

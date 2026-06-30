@@ -1,4 +1,5 @@
-﻿using DnDVoiceStudio.Services.Ai;
+﻿using DnDVoiceStudio.Services.AI.Engines;
+using DnDVoiceStudio.Services.AI.Interfaces;
 using DnDVoiceStudio.Services.Audio.Effects;
 using NAudio.Wave;
 
@@ -145,6 +146,9 @@ public class AudioEngine
         _waveOut.Play();
 
         _waveIn.StartRecording();
+        System.Diagnostics.Debug.WriteLine("AI ENGINE STATUS:");
+        System.Diagnostics.Debug.WriteLine(_aiEngine?.GetType().Name);
+        System.Diagnostics.Debug.WriteLine("IS LOADED: " + _aiEngine?.IsLoaded);
     }
 
     public void Stop()
@@ -168,8 +172,10 @@ public class AudioEngine
     private float[] ProcessAudio(
         float[] samples)
     {
-        float[] processed =
-            _pitchEffect.Process(samples);
+        float[] processed = samples;
+
+        // inject tiny signal so we KNOW audio is alive
+        processed[0] *= 1.01f;
 
         processed =
             _formantEffect.Process(
@@ -209,11 +215,10 @@ public class AudioEngine
             _dragonEffect.Process(
                 processed);
 
-        if (_aiEngine.IsLoaded)
+        if (_aiEngine.IsLoaded && !_aiBypass)
         {
             processed =
-                _aiEngine.Process(
-                    processed);
+                _aiEngine.Process(processed);
         }
 
         processed =
@@ -386,5 +391,11 @@ public class AudioEngine
                 value,
                 0f,
                 1f);
+    }
+    private bool _aiBypass = false;
+
+    public void SetAiBypass(bool enabled)
+    {
+        _aiBypass = enabled;
     }
 }

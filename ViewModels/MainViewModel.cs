@@ -7,12 +7,16 @@ namespace DnDVoiceStudio.ViewModels;
 using DnDVoiceStudio.Models;
 using DnDVoiceStudio.Services;
 using DnDVoiceStudio.Services.Ai;
+using DnDVoiceStudio.Services.AI.Engines;
+using DnDVoiceStudio.Services.AI.Interfaces;
 using DnDVoiceStudio.Services.VoicePreview;
 using Microsoft.Win32;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Text.Json;
+using System.Timers;
 
 public partial class MainViewModel : ObservableObject
 {
@@ -271,6 +275,10 @@ AvailableHotkeys
         MorphPresetB =
             VoicePresets.Skip(1)
                         .FirstOrDefault();
+
+        _statsTimer = new Timer(250);
+        _statsTimer.Elapsed += (_, _) => UpdateAiStats();
+        _statsTimer.Start();
 
     }
 
@@ -847,8 +855,7 @@ AvailableHotkeys
             _onnxEngine.LoadModel(
                 model.OnnxPath);
 
-            _audioEngine.SetAiEngine(
-                _onnxEngine);
+            SetAiEngine(_onnxEngine);
         }
     }
 
@@ -915,7 +922,7 @@ AvailableHotkeys
 
         AiModels.Clear();
 
-        var loader = new VoiceModelLoader();
+        var loader = new AiModelLoader();
 
         var models = loader.LoadModels(fullPath);
 
@@ -977,7 +984,7 @@ AvailableHotkeys
     //AI MODEL MANAGEMENT ENDS HERE
     //AI MODEL MANIPULATION STARTS HERE
 
-    private readonly VoiceModelManager _modelManager = new();
+    private readonly AiModelManager _modelManager = new();
 
     [ObservableProperty]
     private AiModelInfo? selectedAiModel;
@@ -1141,6 +1148,48 @@ AvailableHotkeys
     public ObservableCollection<AiModelInfo> FilteredAiModels { get; } = new();
 
     //AI MODEL MANAGEMENT ENDS HERE
+    //AI MODEL LATENCY STARTS HERE
+
+    private readonly Stopwatch _uiTimer = Stopwatch.StartNew();
+    private readonly Timer _statsTimer;
+
+    private IAiVoiceEngine? _activeEngine;
+    public double CurrentLatencyMs { get; private set; }
+
+    public double AverageLatencyMs { get; private set; }
+
+    public long FramesProcessed { get; private set; }
+
+    public double EstimatedFps { get; private set; }
+    public void SetAiEngine(IAiVoiceEngine engine)
+    {
+        _activeEngine = engine;
+
+        _audioEngine.SetAiEngine(engine);
+    }
+
+    private void UpdateAiStats()
+    {
+        if (_activeEngine == null)
+            return;
+
+        var stats = _activeEngine.Statistics;
+
+        FramesProcessed = stats.FramesProcessed;
+
+        AverageLatencyMs = stats.AverageInferenceMilliseconds;
+
+        CurrentLatencyMs = _activeEngine.Latency.LastLatencyMs;
+
+        EstimatedFps = FramesProcessed /
+            Math.Max(1.0, _uiTimer.Elapsed.TotalSeconds);
+
+        OnPropertyChanged(nameof(CurrentLatencyMs));
+        OnPropertyChanged(nameof(AverageLatencyMs));
+        OnPropertyChanged(nameof(FramesProcessed));
+        OnPropertyChanged(nameof(EstimatedFps));
+    }
+
     //VOICE PARAMS STARTS HERE
 
     private float _currentFormant;

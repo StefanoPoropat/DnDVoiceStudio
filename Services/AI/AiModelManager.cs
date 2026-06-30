@@ -2,7 +2,7 @@
 using System.IO;
 
 namespace DnDVoiceStudio.Services.Ai;
-public class VoiceModelManager
+public class AiModelManager
 {
     public string RootFolder =>
         DataPathHelper.VoiceModels;

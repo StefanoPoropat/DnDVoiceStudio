@@ -1,4 +1,4 @@
-﻿namespace DnDVoiceStudio.Services.Ai;
+﻿namespace DnDVoiceStudio.Services.AI.Interfaces;
 
 public interface IAiModel
 {

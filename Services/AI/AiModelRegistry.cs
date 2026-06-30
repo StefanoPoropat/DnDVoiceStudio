@@ -4,7 +4,7 @@ using System.Text.Json;
 
 namespace DnDVoiceStudio.Services.Ai;
 
-public class VoiceModelService
+public class AiModelRegistry
 {
     public List<AiModelInfo> LoadModels()
     {

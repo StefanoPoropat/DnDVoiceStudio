@@ -1,8 +1,12 @@
-﻿using System.IO;
+﻿using DnDVoiceStudio.Services.AI.DVS;
+using DnDVoiceStudio.Services.AI.Interfaces;
+using DnDVoiceStudio.Services.AI.ONNX;
+using DnDVoiceStudio.Services.AI.RVC;
+using System.IO;
 
 namespace DnDVoiceStudio.Services.Ai;
 
-public class VoiceModelLoader
+public class AiModelLoader
 {
     public List<IAiModel> LoadModels(
 string rootFolder)
